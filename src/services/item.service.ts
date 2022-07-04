@@ -2,24 +2,29 @@ import {Item} from '../model/item';
 
 import {BaseService} from './base.service';
 
-import {Firestore, onSnapshot, Timestamp, where} from 'firebase/firestore';
+import {Firestore, onSnapshot, Timestamp, where, DocumentChange} from 'firebase/firestore';
 import {RootStore} from "../state/root-store";
 import firebase from "firebase/compat";
-import Auth = firebase.auth.Auth;
-import DocumentChange = firebase.firestore.DocumentChange;
 
 export class ItemService extends BaseService<Item> {
-  constructor(private rootStore: RootStore, db: Firestore, public afAuth: Auth) {
+  constructor(private rootStore: RootStore, db: Firestore, public afAuth:  firebase.auth.Auth) {
     super('list', db);
   }
 
-  getFromList(id: string) {
+  getFromList(id?: string) {
     this.clearSubscription();
 
+    debugger;
+    if(!id) {
+      this.rootStore.itemStore.clear();
+      return;
+    }
     const query = this.collectionQuery(where('listId', '==', id), where('boughtAt', '==', null));
+
 
     this.addSubscription(onSnapshot(query, (items) => {
       this.listChanged(id, items.docChanges() as any); // TODO
+
     }));
 
     /*

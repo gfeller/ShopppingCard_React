@@ -9,10 +9,10 @@ import {
   query,
   QueryConstraint,
   updateDoc,
+  Unsubscribe
 } from 'firebase/firestore';
 import {DTO} from "../model/dto";
-import firebase from "firebase/compat";
-import Unsubscribe = firebase.Unsubscribe;
+
 
 export abstract class BaseService<T extends DTO> {
   private subscription: Unsubscribe[] = [];
