@@ -1,21 +1,21 @@
-import {Item} from '../model/item';
+import { Item } from '../model/item';
 
-import {BaseService} from './base.service';
+import { BaseService } from './base.service';
 
-import {Firestore, onSnapshot, Timestamp, where, DocumentChange} from 'firebase/firestore';
-import {RootStore} from "../state/root-store";
+import { Firestore, onSnapshot, Timestamp, where, DocumentChange } from 'firebase/firestore';
+import { RootStore } from "../state/root-store";
 import firebase from "firebase/compat";
 
 export class ItemService extends BaseService<Item> {
-  constructor(private rootStore: RootStore, db: Firestore, public afAuth:  firebase.auth.Auth) {
-    super('list', db);
+  constructor(private rootStore: RootStore, db: Firestore, public afAuth: firebase.auth.Auth) {
+    super('item', db);
   }
 
   getFromList(id?: string) {
     this.clearSubscription();
 
     debugger;
-    if(!id) {
+    if (!id) {
       this.rootStore.itemStore.clear();
       return;
     }
@@ -36,15 +36,16 @@ const query2 = this.collectionQuery(where('listId', '==', id), where('boughtAt',
 */
   }
 
-  /*
+
   async add(item: Item) {
-    item = {...item};
+    item = { ...item };
     item.boughtAt = null;
     item.createdAt = Timestamp.now();
-    item.createdBy = (await this.afAuth.currentUser).uid;
+    item.createdBy = this.afAuth.currentUser!.uid;
+    console.log(item)
     return super.add(item);
   }
-*/
+
   listChanged(id: string, items: DocumentChange<Item>[]) {
     let type: string = "";
     let counter = -1;
@@ -60,9 +61,9 @@ const query2 = this.collectionQuery(where('listId', '==', id), where('boughtAt',
     }
     for (const action of toSend.filter(x => x.length > 0)) {
       if (action[0].type === 'added' || action[0].type === 'modified') {
-        this.rootStore.itemStore.add(action.map((item) => <Item> {id: item.doc.id, ...item.doc.data()}));
+        this.rootStore.itemStore.add(action.map((item) => <Item>{ id: item.doc.id, ...item.doc.data() }));
       } else if (action[0].type === 'removed') {
-        this.rootStore.itemStore.remove(action.map((item) => <Item> {id: item.doc.id, ...item.doc.data()}));
+        this.rootStore.itemStore.remove(action.map((item) => <Item>{ id: item.doc.id, ...item.doc.data() }));
       }
     }
   }
