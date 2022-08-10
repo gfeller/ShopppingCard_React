@@ -2,7 +2,7 @@ import {Item} from '../model/item';
 
 import {BaseService} from './base.service';
 
-import {Firestore, onSnapshot, Timestamp, where, DocumentChange} from 'firebase/firestore';
+import {Firestore, onSnapshot, Timestamp, where, DocumentChange, serverTimestamp} from 'firebase/firestore';
 import {RootStore} from "../state/root-store";
 import firebase from "firebase/compat";
 
@@ -23,7 +23,7 @@ export class ItemService extends BaseService<Item> {
 
 
     this.addSubscription(onSnapshot(query, (items) => {
-      this.listChanged(id, items.docChanges() as any); // TODO
+      this.listChanged(id, items.docChanges()); // TODO
 
     }));
 
@@ -36,15 +36,14 @@ const query2 = this.collectionQuery(where('listId', '==', id), where('boughtAt',
 */
   }
 
-  /*
   async add(item: Item) {
     item = {...item};
     item.boughtAt = null;
-    item.createdAt = Timestamp.now();
-    item.createdBy = (await this.afAuth.currentUser).uid;
+    item.createdAt = serverTimestamp();
+    item.createdBy = this.afAuth.currentUser!.uid;
     return super.add(item);
   }
-*/
+
   listChanged(id: string, items: DocumentChange<Item>[]) {
     let type: string = "";
     let counter = -1;

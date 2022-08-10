@@ -9,6 +9,7 @@ import firebase from "firebase/compat";
 import {createContext, useContext} from "react";
 import {AuthService} from "../services/auth.service";
 import {ItemService} from "../services/item.service";
+import { OnlineService } from "../services/online.service";
 
 const firebaseConfig = {
     apiKey: "AIzaSyBYzkfzpJ4t1AvyNWZKSwr2vF4laPa9v-8",
@@ -33,6 +34,8 @@ export class RootStore {
     authStore: AuthStore;
     authService: AuthService;
     itemService: ItemService;
+    onlineService: OnlineService;
+    uiStore: UIStore;
 
     constructor() {
         const db = getFirestore(app);
@@ -41,11 +44,14 @@ export class RootStore {
         this.listService = new ListService(this, db, auth as unknown as firebase.auth.Auth); // TODO
         this.itemService = new ItemService(this, db, auth as unknown as firebase.auth.Auth); // TODO
 
-        this.listStore = new ListStore(this)
-        this.itemStore = new ItemStore(this)
+        this.listStore = new ListStore(this);
+        this.itemStore = new ItemStore(this);
 
         this.authStore = new AuthStore(this);
-        this.authService = new AuthService(auth, this)
+        this.authService = new AuthService(auth, this);
+
+        this.onlineService = new OnlineService(this);
+        this.uiStore = new UIStore(this);
     }
 }
 
@@ -91,7 +97,7 @@ class ListStore {
 
     }
 
-    setCurrentList(id : string) {
+    setCurrentList(id : string | undefined) {
        this.currentListId = id;
     }
 
@@ -109,6 +115,19 @@ export class AuthStore {
 
     setUser(user: User) {
         this.currentUser = user;
+    }
+}
+
+export class UIStore {
+    public online: Boolean;
+
+    constructor(private rootStore: RootStore) {
+        makeAutoObservable(this);
+        this.online = navigator.onLine;
+    }
+
+    setOnlineStatus(status: Boolean) {
+        this.online = status;
     }
 }
 
