@@ -2,7 +2,7 @@ import {Item} from '../model/item';
 
 import {BaseService} from './base.service';
 
-import {Firestore, onSnapshot, Timestamp, where, DocumentChange, serverTimestamp} from 'firebase/firestore';
+import {Firestore, onSnapshot, Timestamp, where, DocumentChange, serverTimestamp, doc, getDoc, orderBy} from 'firebase/firestore';
 import {RootStore} from "../state/root-store";
 import firebase from "firebase/compat";
 
@@ -41,7 +41,12 @@ const query2 = this.collectionQuery(where('listId', '==', id), where('boughtAt',
     item.boughtAt = null;
     item.createdAt = serverTimestamp();
     item.createdBy = this.afAuth.currentUser!.uid;
+    delete item.id;
     return super.add(item);
+  }
+
+  async getItem(itemId: string){
+    return await getDoc(doc(this.collection, `${itemId}`));
   }
 
   listChanged(id: string, items: DocumentChange<Item>[]) {

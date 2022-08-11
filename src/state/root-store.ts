@@ -78,9 +78,7 @@ class ItemStore{
 
     remove(items : Item[]) {
         items.map(x => {
-            // check;
-            // @ts-ignore
-            this.items.remove(x.id);
+            delete this.items[x.id!]
         })
     }
 
@@ -119,15 +117,21 @@ export class AuthStore {
 }
 
 export class UIStore {
-    public online: Boolean;
+    public online: boolean;
+    public showListEdit: boolean;
 
     constructor(private rootStore: RootStore) {
         makeAutoObservable(this);
         this.online = navigator.onLine;
+        this.showListEdit = false;
     }
 
-    setOnlineStatus(status: Boolean) {
+    setOnlineStatus(status: boolean) {
         this.online = status;
+    }
+
+    toggleListEdit() {
+        this.showListEdit = !this.showListEdit;
     }
 }
 

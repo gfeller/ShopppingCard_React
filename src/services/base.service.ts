@@ -40,7 +40,7 @@ export abstract class BaseService<T extends DTO> {
   }
 
   getDoc(id: string) {
-    return doc<T>(this.collection, `${this.collectionName}/${id}`);
+    return doc<T>(this.collection, `${id}`);
   }
 
   async add(item: T) {

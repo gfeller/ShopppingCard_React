@@ -20,6 +20,7 @@ export const Appbar = observer(() => {
     }
 
     const navigateUser = () => {
+      store.listStore.setCurrentList('');
       navigate("/user")
     }
 
@@ -48,6 +49,7 @@ export const Appbar = observer(() => {
         <IconButton
           color="inherit"
           aria-label="edit"
+          onClick={() => store.uiStore.toggleListEdit()}
         >
           <Editicon />
         </IconButton>
