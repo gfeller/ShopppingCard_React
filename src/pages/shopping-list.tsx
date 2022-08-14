@@ -20,6 +20,7 @@ import {
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
+import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 import { Item } from "../model/item";
 import { Timestamp } from "firebase/firestore";
 import { useNavigate, useParams } from "react-router-dom";
@@ -155,7 +156,7 @@ export const ShoppingList = observer(() => {
         {store.listStore.currentListId && (
           <form
             onSubmit={(e: FormEvent) => handleSubmit(e)}
-            style={{ display: "flex", margin: "5px" }}
+            style={{ display: "flex", margin: "auto", maxWidth: "300px" }}
           >
             <TextField
               id="standard-basic"
@@ -190,7 +191,7 @@ export const ShoppingList = observer(() => {
             />
           ))}
           <BottomNavigationAction
-            icon={<AddIcon />}
+            icon={<PlaylistAddIcon />}
             value={null}
             onClick={() => handleClickOpen()}
           />

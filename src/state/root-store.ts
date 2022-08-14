@@ -120,6 +120,10 @@ export class AuthStore {
   setUser(user: User) {
     this.currentUser = user;
   }
+
+  get isConnected() {
+    return !!this.currentUser?.email
+  }
 }
 
 export class UIStore {

@@ -6,10 +6,26 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React from "react";
+import { observer } from "mobx-react-lite";
+import React, { FormEvent, useState } from "react";
+import { useRootStore } from "../state/root-store";
 import "./user.css";
 
-export const User = () => {
+export const User = observer(() => {
+  const store = useRootStore();
+
+  const [email, setEmail] = useState('');
+  const [pwd, setPassword] = useState('');
+
+  const connectUser = (event: FormEvent) => {
+    event.preventDefault()
+    if ((event.nativeEvent as any).submitter.value === "true") {
+      store.authService.connectUser({ email, pwd });
+    } else {
+      store.authService.login({ email, pwd })
+    }
+  }
+
   return (
     <>
       <div
@@ -20,7 +36,7 @@ export const User = () => {
       >
         <Typography variant="h5">Benutzer Informationen</Typography>
         <div className="cardContainer">
-          <Card className="card">
+          {!store.authStore.isConnected && <Card className="card">
             <CardContent>
               <Typography className="cardTitel">
                 Dieser Account ist nicht mit einer E-Mail verbunden
@@ -30,24 +46,35 @@ export const User = () => {
                 neuem Account verbinden oder sich mit einem bestehemden Account
                 anmelden.
               </Typography>
-              <TextField
-                variant="outlined"
-                type="email"
-                label="E-Mail"
-                className="textField"
-              />
-              <TextField
-                variant="outlined"
-                type="password"
-                label="Passwort"
-                className="textField"
-              />
+              <form onSubmit={connectUser}>
+                <TextField
+                  variant="outlined"
+                  type="email"
+                  label="E-Mail"
+                  className="textField"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  name="email"
+                  required
+                />
+                <TextField
+                  variant="outlined"
+                  type="password"
+                  label="Passwort"
+                  className="textField"
+                  value={pwd}
+                  onChange={(e) => setPassword(e.target.value)}
+                  name="password"
+                  required
+                />
+                <div>
+                  <Button type="submit" value="true">Neuer Account Erstellen</Button>
+                  <Button type="submit" value="false">Anmelden</Button>
+                </div>
+
+              </form>
             </CardContent>
-            <CardActions>
-              <Button>Neuer Account Erstellen</Button>
-              <Button>Anmelden</Button>
-            </CardActions>
-          </Card>
+          </Card>}
           <Card className="card">
             <CardContent>
               <Typography className="cardTitel">Passwort vergessen?</Typography>
@@ -80,4 +107,4 @@ export const User = () => {
       <div></div>
     </>
   );
-};
+});

@@ -5,7 +5,7 @@ import Editicon from "@mui/icons-material/Edit";
 import Shareicon from "@mui/icons-material/Share";
 import CloudOffIcon from "@mui/icons-material/CloudOff";
 import CloudQueueIcon from "@mui/icons-material/CloudQueue";
-import CloudIcon from "@mui/icons-material/Cloud";
+import LinkIcon from '@mui/icons-material/Link';
 import { useRootStore } from "../state/root-store";
 import LinkOffIcon from "@mui/icons-material/LinkOff";
 import { useNavigate } from "react-router-dom";
@@ -86,10 +86,10 @@ export const Appbar = observer(() => {
           <div style={{ display: "flex", alignItems: "center" }}>
             <Button
               color="inherit"
-              startIcon={<LinkOffIcon />}
+              startIcon={store.authStore.isConnected ? <LinkIcon /> : <LinkOffIcon />}
               onClick={navigateUser}
             >
-              {store.authStore.currentUser?.uid.substring(0, 10)}
+              {store.authStore.currentUser?.email || store.authStore.currentUser?.uid.substring(0, 10)}
             </Button>
             {store.uiStore.online ? <CloudQueueIcon /> : <CloudOffIcon />}
           </div>
