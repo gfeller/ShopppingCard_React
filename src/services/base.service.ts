@@ -9,20 +9,17 @@ import {
   query,
   QueryConstraint,
   updateDoc,
-  Unsubscribe
-} from 'firebase/firestore';
-import {DTO} from "../model/dto";
-
+  Unsubscribe,
+} from "firebase/firestore";
+import { DTO } from "../model/dto";
 
 export abstract class BaseService<T extends DTO> {
   private subscription: Unsubscribe[] = [];
 
-  constructor(protected collectionName: string, protected db: Firestore) {
-
-  }
+  constructor(protected collectionName: string, protected db: Firestore) {}
 
   clearSubscription() {
-    this.subscription.forEach(x => x());
+    this.subscription.forEach((x) => x());
     this.subscription = [];
   }
 
@@ -36,7 +33,10 @@ export abstract class BaseService<T extends DTO> {
 
   collectionQuery(...queryConstraints: QueryConstraint[]) {
     const baseCollection = collection(this.db, this.collectionName);
-    return query<T>(baseCollection as CollectionReference<T>, ...queryConstraints); // HACK because no collection<T>
+    return query<T>(
+      baseCollection as CollectionReference<T>,
+      ...queryConstraints
+    ); // HACK because no collection<T>
   }
 
   getDoc(id: string) {

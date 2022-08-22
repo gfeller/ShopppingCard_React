@@ -5,7 +5,7 @@ import Editicon from "@mui/icons-material/Edit";
 import Shareicon from "@mui/icons-material/Share";
 import CloudOffIcon from "@mui/icons-material/CloudOff";
 import CloudQueueIcon from "@mui/icons-material/CloudQueue";
-import LinkIcon from '@mui/icons-material/Link';
+import LinkIcon from "@mui/icons-material/Link";
 import { useRootStore } from "../state/root-store";
 import LinkOffIcon from "@mui/icons-material/LinkOff";
 import { useNavigate } from "react-router-dom";
@@ -36,7 +36,7 @@ export const Appbar = observer(() => {
       await navigator.share(shareData);
       store.uiStore.setMessage({
         show: true,
-        text: "Die Liste wurde geteilt.",
+        text: "Der Link wurde erstellt.",
         severity: Severity.success,
       });
     } catch (err) {
@@ -85,11 +85,14 @@ export const Appbar = observer(() => {
 
           <div style={{ display: "flex", alignItems: "center" }}>
             <Button
+              sx={{ textTransform: "none" }}
               color="inherit"
-              startIcon={store.authStore.isConnected ? <LinkIcon /> : <LinkOffIcon />}
+              startIcon={
+                store.authStore.isConnected ? <LinkIcon /> : <LinkOffIcon />
+              }
               onClick={navigateUser}
             >
-              {store.authStore.currentUser?.email || store.authStore.currentUser?.uid.substring(0, 10)}
+              {store.authStore.displayName}
             </Button>
             {store.uiStore.online ? <CloudQueueIcon /> : <CloudOffIcon />}
           </div>

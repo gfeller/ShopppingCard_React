@@ -19,7 +19,7 @@ export class ItemService extends BaseService<Item> {
     db: Firestore,
     public afAuth: firebase.auth.Auth
   ) {
-    super("list", db);
+    super("item", db);
   }
 
   getFromList(id?: string) {
@@ -27,7 +27,7 @@ export class ItemService extends BaseService<Item> {
 
     // debugger;
     if (!id) {
-      this.rootStore.itemStore.clear();
+      this.rootStore.itemStore && this.rootStore.itemStore.clear();
       return;
     }
     const query = this.collectionQuery(

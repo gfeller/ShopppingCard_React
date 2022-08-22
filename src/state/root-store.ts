@@ -16,6 +16,9 @@ import { AuthService } from "../services/auth.service";
 import { ItemService } from "../services/item.service";
 import { OnlineService } from "../services/online.service";
 import { Message, Severity } from "../interfaces/message";
+import { ThumbUpSharp } from "@mui/icons-material";
+import { MessageService } from "../services/message.service";
+import { getMessaging } from "firebase/messaging";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBYzkfzpJ4t1AvyNWZKSwr2vF4laPa9v-8",
@@ -39,10 +42,12 @@ export class RootStore {
   itemService: ItemService;
   onlineService: OnlineService;
   uiStore: UIStore;
+  messageService: MessageService;
 
   constructor() {
     const db = getFirestore(app);
     const auth = getAuth(app);
+    const messaging = getMessaging(app);
 
     this.listService = new ListService(
       this,
@@ -63,6 +68,8 @@ export class RootStore {
 
     this.onlineService = new OnlineService(this);
     this.uiStore = new UIStore(this);
+
+    this.messageService = new MessageService(messaging, this, db);
   }
 }
 
@@ -73,8 +80,8 @@ class ItemStore {
     makeAutoObservable(this);
 
     autorun(() => {
-      // debugger;
-      rootStore.itemService.getFromList(rootStore.listStore.currentListId);
+      rootStore.listStore.currentListId &&
+        rootStore.itemService.getFromList(rootStore.listStore.currentListId);
     });
   }
 
@@ -118,11 +125,19 @@ export class AuthStore {
   }
 
   setUser(user: User) {
-    this.currentUser = user;
+    this.currentUser = { ...user };
   }
 
   get isConnected() {
-    return !!this.currentUser?.email
+    return !!this.currentUser?.email;
+  }
+
+  get displayName() {
+    return (
+      this.currentUser?.displayName ||
+      this.currentUser?.email ||
+      this.currentUser?.uid.substring(0, 10)
+    );
   }
 }
 

@@ -4,7 +4,17 @@ export class AuthUser {
   public email: string | null;
   public displayName: string;
 
-  constructor({ uid, isAnonymous, email, displayName }: { uid: string, isAnonymous: boolean, email: string, displayName: string }) {
+  constructor({
+    uid,
+    isAnonymous,
+    email,
+    displayName,
+  }: {
+    uid: string;
+    isAnonymous: boolean;
+    email: string;
+    displayName: string;
+  }) {
     this.uid = uid;
     this.isAnonymous = isAnonymous;
     this.email = email;
@@ -14,4 +24,9 @@ export class AuthUser {
 export interface AuthConnect {
   email: string;
   pwd: string;
+}
+
+export interface AuthUserSettingsChange extends AuthConnect {
+  pwdOld: string;
+  displayName: string;
 }

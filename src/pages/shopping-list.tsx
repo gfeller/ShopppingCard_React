@@ -20,10 +20,15 @@ import {
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
-import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
+import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
+import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
+import CheckIcon from "@mui/icons-material/Check";
 import { Item } from "../model/item";
 import { Timestamp } from "firebase/firestore";
 import { useNavigate, useParams } from "react-router-dom";
+
+import "./shopping-list.css";
+import moment from "moment";
 
 export const ShoppingList = observer(() => {
   const store = useRootStore();
@@ -80,9 +85,17 @@ export const ShoppingList = observer(() => {
     navigate(`./${newValue}`);
   };
 
-  const buyItem = (item: Item) => {
-    item.boughtAt = Timestamp.now();
-    store.itemService.update(item);
+  const handleBuyItem = (item: Item) => {
+    const newItem = { ...item };
+    if (item.boughtAt) {
+      newItem.boughtAt = undefined;
+      newItem.id = undefined;
+      newItem.createdAt = Timestamp.now();
+      store.itemService.add(newItem);
+    } else {
+      newItem.boughtAt = Timestamp.now();
+      store.itemService.update(newItem);
+    }
   };
 
   const deleteList = () => {
@@ -94,6 +107,11 @@ export const ShoppingList = observer(() => {
       return;
     }
     setConfirmDelete(1);
+  };
+
+  const deleteItem = (e: React.MouseEvent<HTMLButtonElement>, id: string) => {
+    e.stopPropagation();
+    store.itemService.remove(id);
   };
 
   useEffect(() => {
@@ -109,21 +127,38 @@ export const ShoppingList = observer(() => {
               (x: Item) => x.listId === store.listStore.currentListId!
             ).length > 0 ? (
               <List>
-                {Object.values(store.itemStore.items).map(
-                  (item) =>
-                    item.listId === store.listStore.currentListId && (
-                      <ListItem disablePadding key={item.id}>
-                        <ListItemButton onClick={() => buyItem(item)}>
-                          <ListItemText primary={item.description} />
-                          <IconButton
-                            onClick={() => store.itemService.remove(item.id!)}
-                          >
-                            <DeleteIcon />
-                          </IconButton>
-                        </ListItemButton>
-                      </ListItem>
-                    )
-                )}
+                {Object.values(store.itemStore.items)
+                  .sort((a, b) => b.createdAt!.seconds - a.createdAt!.seconds)
+                  .map(
+                    (item) =>
+                      item.listId === store.listStore.currentListId && (
+                        <ListItem
+                          disablePadding
+                          key={item.id}
+                          className={item.boughtAt ? "bought" : ""}
+                        >
+                          <ListItemButton onClick={() => handleBuyItem(item)}>
+                            {item.boughtAt ? (
+                              <AddShoppingCartIcon />
+                            ) : (
+                              <CheckIcon />
+                            )}
+                            <ListItemText primary={item.description} />
+                            {item.boughtAt ? (
+                              <p>
+                                {moment(item.boughtAt.toMillis()).fromNow()}
+                              </p>
+                            ) : (
+                              <IconButton
+                                onClick={(e) => deleteItem(e, item.id!)}
+                              >
+                                <DeleteIcon />
+                              </IconButton>
+                            )}
+                          </ListItemButton>
+                        </ListItem>
+                      )
+                  )}
               </List>
             ) : (
               <Typography
@@ -187,10 +222,12 @@ export const ShoppingList = observer(() => {
             <BottomNavigationAction
               key={list.id}
               value={list.id}
+              data-testid={list.description}
               label={list.description}
             />
           ))}
           <BottomNavigationAction
+            className="addNewList"
             icon={<PlaylistAddIcon />}
             value={null}
             onClick={() => handleClickOpen()}
@@ -214,7 +251,12 @@ export const ShoppingList = observer(() => {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => handleClose(true)}>Abbruch</Button>
-          <Button onClick={() => handleClose(false)}>Erfassen</Button>
+          <Button
+            data-testid="createNewList"
+            onClick={() => handleClose(false)}
+          >
+            Erfassen
+          </Button>
         </DialogActions>
       </Dialog>
 
