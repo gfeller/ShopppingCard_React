@@ -1,6 +1,5 @@
 import {
   Auth,
-  deleteUser,
   linkWithCredential,
   reauthenticateWithCredential,
   sendPasswordResetEmail,
@@ -11,12 +10,7 @@ import {
 } from "@firebase/auth";
 
 import { EmailAuthProvider, User } from "firebase/auth";
-import { action } from "mobx";
-import {
-  AuthConnect,
-  AuthUser,
-  AuthUserSettingsChange,
-} from "../interfaces/auth";
+import { AuthConnect, AuthUserSettingsChange } from "../interfaces/auth";
 import { Severity } from "../interfaces/message";
 import { RootStore } from "../state/root-store";
 

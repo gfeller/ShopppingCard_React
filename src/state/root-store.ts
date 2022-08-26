@@ -16,7 +16,6 @@ import { AuthService } from "../services/auth.service";
 import { ItemService } from "../services/item.service";
 import { OnlineService } from "../services/online.service";
 import { Message, Severity } from "../interfaces/message";
-import { ThumbUpSharp } from "@mui/icons-material";
 import { MessageService } from "../services/message.service";
 import { getMessaging } from "firebase/messaging";
 
@@ -145,12 +144,14 @@ export class UIStore {
   public online: boolean;
   public showListEdit: boolean;
   public message: Message;
+  public notificationAccess: boolean;
 
   constructor(private rootStore: RootStore) {
     makeAutoObservable(this);
     this.online = navigator.onLine;
     this.showListEdit = false;
     this.message = { show: false, text: "", severity: Severity.info };
+    this.notificationAccess = false;
   }
 
   setOnlineStatus(status: boolean) {
@@ -168,6 +169,10 @@ export class UIStore {
     this.message.show = false;
     this.message.text = "false";
   };
+
+  setNotificationAccess(access: boolean) {
+    this.notificationAccess = access;
+  }
 }
 
 export const RootContext = createContext<RootStore>({} as RootStore);

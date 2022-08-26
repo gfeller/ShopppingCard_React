@@ -26,6 +26,7 @@ export const User = observer(() => {
 
   useEffect(() => {
     setDisplayName(store.authStore.displayName || "");
+    store.messageService.checkToken();
   }, [store.authStore.displayName]);
 
   const connectUser = (event: FormEvent) => {
@@ -280,8 +281,16 @@ export const User = observer(() => {
               </Typography>
             </CardContent>
             <CardActions>
-              <Button onClick={() => store.messageService.requestPermission()}>
-                Benachrichtigungen aktivieren
+              <Button
+                onClick={() =>
+                  !store.uiStore.notificationAccess
+                    ? store.messageService.requestPermission()
+                    : store.messageService.removePermission()
+                }
+              >
+                {!store.uiStore.notificationAccess
+                  ? "Benachrichtigungen aktivieren"
+                  : " Keine Benachrichtigungen mehr erhalten."}
               </Button>
             </CardActions>
           </Card>

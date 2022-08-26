@@ -1,5 +1,5 @@
 /// <reference types="cypress" />
-
+/* eslint-disable */
 describe("home", () => {
   beforeEach(() => {
     cy.clearCookies();

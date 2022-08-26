@@ -1,4 +1,4 @@
-import { AppBar, Button, IconButton, Toolbar, Typography } from "@mui/material";
+import { AppBar, Button, IconButton, Toolbar } from "@mui/material";
 import { observer } from "mobx-react-lite";
 import HomeIcon from "@mui/icons-material/Home";
 import Editicon from "@mui/icons-material/Edit";

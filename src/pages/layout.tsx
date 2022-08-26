@@ -1,4 +1,4 @@
-import { Alert, Snackbar, Typography } from "@mui/material";
+import { Alert, Snackbar } from "@mui/material";
 import { observer } from "mobx-react-lite";
 import React from "react";
 import { Outlet } from "react-router-dom";
