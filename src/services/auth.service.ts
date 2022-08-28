@@ -38,7 +38,6 @@ export class AuthService {
         this.rootStore.authStore.setUser(user);
       })
       .catch((error) => {
-        console.log("test");
         this.rootStore.uiStore.setMessage({
           text: "Account verbindung fehlgeschlagen",
           show: true,

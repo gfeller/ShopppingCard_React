@@ -12,6 +12,7 @@ import {
   Messaging,
   onMessage,
 } from "firebase/messaging";
+import { observe } from "mobx";
 import { Severity } from "../interfaces/message";
 import { RootStore } from "../state/root-store";
 
@@ -22,10 +23,15 @@ export class MessageService {
     protected db: Firestore
   ) {
     this.receiveMessage();
+
+    observe(this.rootStore.authStore, change => {
+      if (this.rootStore.authStore.currentUser!.uid) {
+        this.checkToken();
+      }
+    })
   }
 
   updateToken(token: string) {
-    console.log(this.rootStore.authStore.currentUser!.uid);
     setDoc(
       doc(this.db, "fcmTokens", this.rootStore.authStore.currentUser!.uid),
       { token }
@@ -38,10 +44,16 @@ export class MessageService {
 
   async checkToken() {
     const user = this.rootStore.authStore.currentUser;
-    if (user)
-      console.log(
-        await getDoc(doc(collection(this.db, "fcmTokens"), user!.uid))
-      );
+    if (user) {
+      const docSnap = await getDoc(doc(collection(this.db, "fcmTokens"), user!.uid));
+
+      if (docSnap.exists()) {
+        this.rootStore.uiStore.setNotificationAccess(true)
+      } else {
+        this.rootStore.uiStore.setNotificationAccess(false)
+      }
+    }
+
   }
 
   async removeToken() {
@@ -53,7 +65,6 @@ export class MessageService {
       severity: Severity.info,
     });
     this.setPermission(false);
-    console.log(Notification.permission);
   }
 
   requestPermission = () => {
@@ -79,9 +90,6 @@ export class MessageService {
           severity: Severity.info,
         });
         this.updateToken(token);
-      })
-      .catch((err) => {
-        console.log(err);
       })
       .finally(() => {
         if (

@@ -26,7 +26,6 @@ export const User = observer(() => {
 
   useEffect(() => {
     setDisplayName(store.authStore.displayName || "");
-    store.messageService.checkToken();
   }, [store.authStore.displayName]);
 
   const connectUser = (event: FormEvent) => {
