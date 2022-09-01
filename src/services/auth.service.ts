@@ -93,16 +93,4 @@ export class AuthService {
       return Promise.all(actions);
     };
   }
-  /*
-
-  async delete(data: AuthUserSettingsChange) {
-      const cred = EmailAuthProvider.credential(data.email, data.pwdOld);
-      const user = await this.afAuth.currentUser;
-
-      await reauthenticateWithCredential(user, cred);
-      await deleteUser(user);
-
-      return signInAnonymously(this.afAuth);
-  }
-  }*/
 }
