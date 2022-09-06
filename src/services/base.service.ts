@@ -1,22 +1,10 @@
-import {
-  addDoc,
-  collection,
-  CollectionReference,
-  deleteDoc,
-  doc,
-  DocumentData,
-  Firestore,
-  query,
-  QueryConstraint,
-  updateDoc,
-  Unsubscribe,
-} from "firebase/firestore";
-import { DTO } from "../model/dto";
+import {addDoc, collection, CollectionReference, deleteDoc, doc, DocumentData, Firestore, query, QueryConstraint, Unsubscribe, updateDoc,} from "firebase/firestore";
+import {DTO} from "../model/dto";
 
 export abstract class BaseService<T extends DTO> {
   private subscription: Unsubscribe[] = [];
 
-  constructor(protected collectionName: string, protected db: Firestore) {}
+  protected constructor(protected collectionName: string, protected db: Firestore) {}
 
   clearSubscription() {
     this.subscription.forEach((x) => x());

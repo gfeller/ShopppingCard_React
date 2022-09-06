@@ -1,16 +1,10 @@
 import React from "react";
-import { observer } from "mobx-react-lite";
-import { useNavigate, useParams } from "react-router-dom";
+import {observer} from "mobx-react-lite";
+import {useNavigate, useParams} from "react-router-dom";
 import CheckIcon from "@mui/icons-material/Check";
 import ClearIcon from "@mui/icons-material/Clear";
-import {
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  Typography,
-} from "@mui/material";
-import { useRootStore } from "../state/root-store";
+import {Button, Card, CardActions, CardContent, Typography,} from "@mui/material";
+import {useRootStore} from "../state/root-store";
 
 export const SharedList = observer(() => {
   const params = useParams();

@@ -1,31 +1,15 @@
-import { observer } from "mobx-react-lite";
-import { useRootStore } from "../state/root-store";
-import React, { FormEvent, useEffect, useState } from "react";
-import {
-  BottomNavigation,
-  BottomNavigationAction,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  IconButton,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemText,
-  Paper,
-  TextField,
-  Typography,
-} from "@mui/material";
+import {observer} from "mobx-react-lite";
+import {useRootStore} from "../state/root-store";
+import React, {FormEvent, useEffect} from "react";
+import {BottomNavigation, BottomNavigationAction, Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, List, ListItem, ListItemButton, ListItemText, Paper, TextField, Typography,} from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import CheckIcon from "@mui/icons-material/Check";
-import { Item } from "../model/item";
-import { Timestamp } from "firebase/firestore";
-import { useNavigate, useParams } from "react-router-dom";
+import {Item} from "../model/item";
+import {Timestamp} from "firebase/firestore";
+import {useNavigate, useParams} from "react-router-dom";
 
 import "./shopping-list.css";
 import moment from "moment";
@@ -39,9 +23,6 @@ export const ShoppingList = observer(() => {
   const [newItem, setNewItem] = React.useState("");
   let navigate = useNavigate();
   let urlParams = useParams();
-  const [confirmDelete, setConfirmDelete] = useState(0);
-
-  const deleteOptions = ["Liste löschen", "Löschen bestätigen"];
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -60,7 +41,6 @@ export const ShoppingList = observer(() => {
   const handleEditClose = (save: boolean) => {
     const newText = text;
     setText("");
-    setConfirmDelete(0);
     store.uiStore.toggleListEdit();
     if (!save) return;
     if (text !== "") {
@@ -100,14 +80,9 @@ export const ShoppingList = observer(() => {
   };
 
   const deleteList = () => {
-    if (confirmDelete) {
-      store.listService.remove(store.listStore.currentListId!);
-      store.listStore.setCurrentList("");
-      store.uiStore.toggleListEdit();
-      setConfirmDelete(0);
-      return;
-    }
-    setConfirmDelete(1);
+    store.listService.remove(store.listStore.currentListId!);
+    store.listStore.setCurrentList("");
+    store.uiStore.toggleListEdit();
   };
 
   const deleteItem = (e: React.MouseEvent<HTMLButtonElement>, id: string) => {
@@ -223,7 +198,6 @@ export const ShoppingList = observer(() => {
             <BottomNavigationAction
               key={list.id}
               value={list.id}
-              data-testid={list.description}
               label={list.description}
             />
           ))}

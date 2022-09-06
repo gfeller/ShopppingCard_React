@@ -1,15 +1,9 @@
-import { Item } from "../model/item";
+import {Item} from "../model/item";
 
-import { BaseService } from "./base.service";
+import {BaseService} from "./base.service";
 
-import {
-  Firestore,
-  onSnapshot,
-  Timestamp,
-  where,
-  DocumentChange,
-} from "firebase/firestore";
-import { RootStore } from "../state/root-store";
+import {DocumentChange, Firestore, onSnapshot, Timestamp, where,} from "firebase/firestore";
+import {RootStore} from "../state/root-store";
 import moment from "moment";
 import {Auth} from "@firebase/auth";
 

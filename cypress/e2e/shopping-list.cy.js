@@ -13,9 +13,11 @@ describe("shopping-list", () => {
     cy.get(".addNewList").click();
     cy.get("input").type("Test list");
     cy.get('[data-testid="createNewList"]').click();
-    cy.get('[data-testid="Test list"]').should("exist");
 
-    cy.get('[data-testid="Test list"]').first().click();
+    cy.contains('Test list').first().should("exist");
+
+
+    cy.contains('Test list').first().click();
     cy.get(`[aria-label="edit"]`).first().click();
 
     cy.contains("Liste löschen").click()

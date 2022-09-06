@@ -1,20 +1,8 @@
-import {
-  setDoc,
-  doc,
-  collection,
-  Firestore,
-  deleteDoc,
-  getDoc,
-} from "firebase/firestore";
-import {
-  deleteToken,
-  getToken,
-  Messaging,
-  onMessage,
-} from "firebase/messaging";
-import { observe } from "mobx";
-import { Severity } from "../interfaces/message";
-import { RootStore } from "../state/root-store";
+import {collection, deleteDoc, doc, Firestore, getDoc, setDoc,} from "firebase/firestore";
+import {deleteToken, getToken, Messaging, onMessage,} from "firebase/messaging";
+import {observe} from "mobx";
+import {Severity} from "../interfaces/message";
+import {RootStore} from "../state/root-store";
 
 export class MessageService {
   constructor(
@@ -58,7 +46,7 @@ export class MessageService {
 
   async removeToken() {
     const user = this.rootStore.authStore.currentUser;
-    deleteDoc(doc(collection(this.db, "fcmTokens"), user!.uid));
+    await deleteDoc(doc(collection(this.db, "fcmTokens"), user!.uid));
     this.rootStore.uiStore.setMessage({
       text: "Erfolgreich abgemeldet.",
       severity: Severity.info,

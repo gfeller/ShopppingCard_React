@@ -4,14 +4,12 @@ export function useTmpState<T>(initValue : T, timeout: number = 1000) {
     const [state, setState] = useState<T>(initValue);
 
     useEffect(() => {
-        debugger;
         if (state !== initValue) {
-            const id = setTimeout(() => {
+            setTimeout(() => {
                 if (state !== initValue) {
                     setState(initValue)
                 }
             }, timeout)
-            // return clearTimeout(id);
         }
     }, [state])
 

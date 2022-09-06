@@ -1,14 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import "./App.css";
-import { RootStore, StoreRootProvider } from "./state/root-store";
-import { observer } from "mobx-react-lite";
-import { ShoppingList } from "./pages/shopping-list";
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import { Layout } from "./pages/layout";
-import { User } from "./pages/user";
-import { SharedList } from "./pages/share";
+import {RootStore, StoreRootProvider, useRootStore} from "./state/root-store";
+import {observer} from "mobx-react-lite";
+import {ShoppingList} from "./pages/shopping-list";
+import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
+import {Layout} from "./pages/layout";
+import {User} from "./pages/user";
+import {SharedList} from "./pages/share";
+import {LinearProgress} from "@mui/material";
 
 const AppObserver = observer(() => {
+  if(!useRootStore().init) {
+    return <LinearProgress/>
+  }
+
   return (
     <div className="App">
       <BrowserRouter>

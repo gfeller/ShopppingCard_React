@@ -1,15 +1,15 @@
-import { AppBar, Button, IconButton, Toolbar } from "@mui/material";
-import { observer } from "mobx-react-lite";
+import {AppBar, Button, IconButton, Toolbar} from "@mui/material";
+import {observer} from "mobx-react-lite";
 import HomeIcon from "@mui/icons-material/Home";
 import Editicon from "@mui/icons-material/Edit";
 import Shareicon from "@mui/icons-material/Share";
 import CloudOffIcon from "@mui/icons-material/CloudOff";
 import CloudQueueIcon from "@mui/icons-material/CloudQueue";
 import LinkIcon from "@mui/icons-material/Link";
-import { useRootStore } from "../state/root-store";
+import {useRootStore} from "../state/root-store";
 import LinkOffIcon from "@mui/icons-material/LinkOff";
-import { useNavigate } from "react-router-dom";
-import { Severity } from "../interfaces/message";
+import {useNavigate} from "react-router-dom";
+import {Severity} from "../interfaces/message";
 
 export const Appbar = observer(() => {
   const store = useRootStore();
@@ -26,7 +26,7 @@ export const Appbar = observer(() => {
   };
 
   let shareData = {
-    title: "List",
+    title: "Use this link to share this list",
     text: "Add a shared List",
     url: window.location.pathname.replace("list", "share"),
   };
@@ -34,10 +34,6 @@ export const Appbar = observer(() => {
   const shareList = async () => {
     try {
       await navigator.share(shareData);
-      store.uiStore.setMessage({
-        text: "Der Link wurde erstellt.",
-        severity: Severity.success,
-      });
     } catch (err) {
       store.uiStore.setMessage({
         text: "Der Browser unterstützt die Funktion nicht.",

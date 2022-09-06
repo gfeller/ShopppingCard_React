@@ -1,4 +1,4 @@
-import { RootStore } from "../state/root-store";
+import {RootStore} from "../state/root-store";
 
 export class OnlineService {
 

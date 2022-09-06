@@ -1,6 +1,6 @@
-import { Timestamp } from "firebase/firestore";
-import { DTO } from "./dto";
-import { makeAutoObservable } from "mobx";
+import {Timestamp} from "firebase/firestore";
+import {DTO} from "./dto";
+import {makeAutoObservable} from "mobx";
 
 export class Item implements DTO {
   id?: string;

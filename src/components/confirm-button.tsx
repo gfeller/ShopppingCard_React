@@ -1,42 +1,24 @@
-import { observer } from "mobx-react-lite";
-import { useRootStore } from "../state/root-store";
-import React, { FormEvent, useEffect, useState } from "react";
-import {
-  BottomNavigation,
-  BottomNavigationAction,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  IconButton,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemText,
-  Paper,
-  TextField,
-
-} from "@mui/material";
+import React from "react";
+import {Button,} from "@mui/material";
 
 import DeleteIcon from "@mui/icons-material/Delete";
 import {useTmpState} from "../hooks/use-temp-state";
 
 
-
 export const ConfirmButton = ({label, deleteFn} : {label: string, deleteFn : () => void}) => {
-  const {state, setState} = useTmpState(false, 2000);
+  const {state, setState} = useTmpState(false, 5000);
 
   const onDelete = () => {
     if (state) {
+      debugger;
       deleteFn();
     }
     setState(true)
   }
 
   return <Button sx={{color: state ? "red" : "orangered"}}
-                 startIcon={<DeleteIcon/>}
+                 endIcon={<DeleteIcon/>}
                  onClick={onDelete}>
-    {state ? `${label} Löschen` : "Löschen bestätigen"}
+    {state ? "Löschen bestätigen" : `${label} löschen`}
   </Button>
 };

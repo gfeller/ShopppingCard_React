@@ -1,5 +1,5 @@
 import {DTO} from "./dto";
-import { makeAutoObservable } from 'mobx'
+import {makeAutoObservable} from 'mobx'
 
 
 export class List implements DTO {

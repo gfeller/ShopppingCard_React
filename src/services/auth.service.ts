@@ -1,18 +1,9 @@
-import {
-  Auth,
-  linkWithCredential,
-  reauthenticateWithCredential,
-  sendPasswordResetEmail,
-  signInAnonymously,
-  signInWithEmailAndPassword,
-  updatePassword,
-  updateProfile,
-} from "@firebase/auth";
+import {Auth, linkWithCredential, reauthenticateWithCredential, sendPasswordResetEmail, signInAnonymously, signInWithEmailAndPassword, updatePassword, updateProfile,} from "@firebase/auth";
 
-import { EmailAuthProvider, User } from "firebase/auth";
-import { AuthConnect, AuthUserSettingsChange } from "../interfaces/auth";
-import { Severity } from "../interfaces/message";
-import { RootStore } from "../state/root-store";
+import {EmailAuthProvider, User} from "firebase/auth";
+import {AuthConnect, AuthUserSettingsChange} from "../interfaces/auth";
+import {Severity} from "../interfaces/message";
+import {RootStore} from "../state/root-store";
 
 export class AuthService {
   constructor(public auth: Auth, private rootStore: RootStore) {

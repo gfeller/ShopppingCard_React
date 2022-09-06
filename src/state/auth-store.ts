@@ -1,16 +1,38 @@
-import {User} from "firebase/auth";
 import {makeAutoObservable} from "mobx";
 import {RootStore} from "./root-store";
 
+export interface IAuthUser{
+    uid: string;
+    isAnonymous: boolean;
+    email: string | null;
+    displayName: string| null;
+}
+
+export class AuthUser implements IAuthUser{
+    public uid: string;
+    public isAnonymous: boolean;
+    public email: string | null;
+    public displayName: string| null;
+
+    constructor({uid, isAnonymous, email, displayName}: { uid: string, isAnonymous: boolean, email: string | null , displayName: string| null }) {
+        this.uid = uid;
+        this.isAnonymous = isAnonymous;
+        this.email = email;
+        this.displayName = displayName;
+
+        makeAutoObservable(this);
+    }
+}
+
 export class AuthStore {
-    public currentUser?: User;
+    public currentUser?: AuthUser;
 
     constructor(private rootStore: RootStore) {
         makeAutoObservable(this);
     }
 
-    setUser(user: User) {
-        this.currentUser = {...user};
+    setUser(user: IAuthUser) {
+        this.currentUser = new AuthUser(user);
     }
 
     get isConnected() {

@@ -29,6 +29,10 @@ export class RootStore {
   uiStore: UiStore;
   messageService: MessageService;
 
+  get init () {
+    return this.authStore.currentUser;
+  }
+
   constructor() {
     const db = getFirestore(app);
     const auth = getAuth(app);

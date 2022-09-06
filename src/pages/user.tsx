@@ -1,16 +1,10 @@
-import {
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  TextField,
-  Typography,
-} from "@mui/material";
-import { observer } from "mobx-react-lite";
-import React, { FormEvent, useEffect, useState } from "react";
-import { Severity } from "../interfaces/message";
-import { useRootStore } from "../state/root-store";
+import {Button, Card, CardActions, CardContent, TextField, Typography,} from "@mui/material";
+import {observer} from "mobx-react-lite";
+import React, {FormEvent, useEffect, useState} from "react";
+import {Severity} from "../interfaces/message";
+import {useRootStore} from "../state/root-store";
 import "./user.css";
+import {OnlyAnonymous, OnlyUser} from "../components/only-user";
 
 export const User = observer(() => {
   const store = useRootStore();
@@ -18,7 +12,6 @@ export const User = observer(() => {
   const [email, setEmail] = useState("");
   const [pwd, setPassword] = useState("");
 
-  const [resetPwdEmail, setResetPwdEmail] = useState("");
   const [displayName, setDisplayName] = useState("");
 
   const [oldPwd, setOldPwd] = useState("");
@@ -39,7 +32,7 @@ export const User = observer(() => {
 
   const resetPwd = (event: FormEvent) => {
     event.preventDefault();
-    const email = store.authStore.currentUser?.email || resetPwdEmail;
+    const email = store.authStore.currentUser?.email;
     if (email) {
       store.authService
         .resetPwdMail(email)
@@ -116,45 +109,21 @@ export const User = observer(() => {
       >
         <Typography variant="h5">Benutzer Informationen</Typography>
         <div className="cardContainer">
-          {!store.authStore.isConnected && (
+          <OnlyAnonymous>
             <Card className="card">
               <CardContent>
                 <Typography className="cardTitel">
                   Dieser Account ist nicht mit einer E-Mail verbunden
                 </Typography>
                 <Typography>
-                  Listen können verloren gehen! Sie können ihren Account mit
-                  einem neuem Account verbinden oder sich mit einem bestehemden
-                  Account anmelden.
+                  Listen können verloren gehen! Sie können ihren Account mit einem neuem Account verbinden oder sich mit einem bestehemden Account anmelden.
                 </Typography>
                 <form
                   onSubmit={connectUser}
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "start",
-                  }}
+                  style={{ display: "flex", flexDirection: "column", alignItems: "start"}}
                 >
-                  <TextField
-                    variant="outlined"
-                    type="email"
-                    label="E-Mail"
-                    className="textField"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    name="email"
-                    required
-                  />
-                  <TextField
-                    variant="outlined"
-                    type="password"
-                    label="Passwort"
-                    className="textField"
-                    value={pwd}
-                    onChange={(e) => setPassword(e.target.value)}
-                    name="password"
-                    required
-                  />
+                  <TextField variant="outlined" type="email" label="E-Mail" className="textField" value={email} onChange={(e) => setEmail(e.target.value)} name="email" required />
+                  <TextField variant="outlined" type="password" label="Passwort" className="textField" value={pwd} onChange={(e) => setPassword(e.target.value)} name="password" required/>
                   <div style={{ paddingTop: "10px" }}>
                     <Button type="submit" value="true">
                       Neuer Account Erstellen
@@ -166,44 +135,25 @@ export const User = observer(() => {
                 </form>
               </CardContent>
             </Card>
-          )}
-          {store.authStore.isConnected && (
+          </OnlyAnonymous>
+          <OnlyUser>
             <Card className="card">
               <CardContent>
                 <Typography className="cardTitel">
                   Anzeigename ändern
                 </Typography>
                 <form
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "start",
-                  }}
+                  style={{ display: "flex", flexDirection: "column", alignItems: "start", }}
                   onSubmit={changeDisplayname}
                 >
-                  <TextField
-                    variant="outlined"
-                    type="email"
-                    label="E-mail"
-                    className="textField"
-                    value={store.authStore.currentUser?.email}
-                    disabled
-                  />
-                  <TextField
-                    variant="outlined"
-                    type="text"
-                    label="Anzeigename"
-                    className="textField"
-                    value={displayName}
-                    onChange={(e) => setDisplayName(e.target.value)}
-                    required
-                  />
+                  <TextField variant="outlined" type="email" label="E-mail" className="textField" value={store.authStore.currentUser?.email} disabled />
+                  <TextField variant="outlined" type="text" label="Anzeigename" className="textField" value={displayName} onChange={(e) => setDisplayName(e.target.value)} required />
                   <Button type="submit">Änderung übernehmen</Button>
                 </form>
               </CardContent>
             </Card>
-          )}
-          {store.authStore.isConnected && (
+          </OnlyUser>
+          <OnlyUser>
             <Card className="card">
               <CardContent>
                 <Typography className="cardTitel">Passwort ändern</Typography>
@@ -216,54 +166,24 @@ export const User = observer(() => {
                   onSubmit={changePwd}
                 >
                   <TextField
-                    variant="outlined"
-                    type="password"
-                    label="Passwort Alt"
-                    className="textField"
-                    value={oldPwd}
-                    onChange={(e) => setOldPwd(e.target.value)}
-                    required
+                    variant="outlined" type="password" label="Passwort Alt" className="textField" value={oldPwd} onChange={(e) => setOldPwd(e.target.value)} required
                   />
-                  <TextField
-                    variant="outlined"
-                    type="password"
-                    label="Passwort Neu"
-                    className="textField"
-                    value={newPwd}
-                    onChange={(e) => setNewPwd(e.target.value)}
-                    required
-                  />
+                  <TextField variant="outlined" type="password" label="Passwort Neu" className="textField" value={newPwd} onChange={(e) => setNewPwd(e.target.value)} required />
                   <Button type="submit">Passwort wechseln</Button>
                 </form>
               </CardContent>
             </Card>
-          )}
-          <Card className="card">
-            <CardContent>
-              <Typography className="cardTitel">Passwort vergessen?</Typography>
-              <form
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "start",
-                }}
-                onSubmit={resetPwd}
-              >
-                {!store.authStore.isConnected && (
-                  <TextField
-                    variant="outlined"
-                    type="email"
-                    label="E-Mail"
-                    className="textField"
-                    value={resetPwdEmail}
-                    onChange={(e) => setResetPwdEmail(e.target.value)}
-                    required
-                  />
-                )}
-                <Button type="submit">Passwort zurücksetzen</Button>
-              </form>
-            </CardContent>
-          </Card>
+          </OnlyUser>
+          <OnlyUser>
+            <Card className="card">
+              <CardContent>
+                <Typography className="cardTitel">Passwort vergessen?</Typography>
+                <form style={{ display: "flex", flexDirection: "column", alignItems: "start"}} onSubmit={resetPwd}>
+                  <Button type="submit">Passwort zurücksetzen</Button>
+                </form>
+              </CardContent>
+            </Card>
+          </OnlyUser>
           <Card className="card">
             <CardContent>
               <Typography className="cardTitel">Push-Nachrichten</Typography>
