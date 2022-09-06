@@ -1,33 +1,19 @@
-import { List } from "../model/list";
-import {
-  makeAutoObservable,
-  IObservableArray,
-  observable,
-  autorun,
-} from "mobx";
-import { Item } from "../model/item";
-import { ListService } from "../services/list.service";
-import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
-import { getAuth, User } from "firebase/auth";
-import firebase from "firebase/compat";
-import { createContext, useContext } from "react";
-import { AuthService } from "../services/auth.service";
-import { ItemService } from "../services/item.service";
-import { OnlineService } from "../services/online.service";
-import { Message, Severity } from "../interfaces/message";
-import { MessageService } from "../services/message.service";
-import { getMessaging } from "firebase/messaging";
+import {ListService} from "../services/list.service";
+import {initializeApp} from "firebase/app";
+import {getFirestore} from "firebase/firestore";
+import {getAuth} from "firebase/auth";
+import {createContext, useContext} from "react";
+import {AuthService} from "../services/auth.service";
+import {ItemService} from "../services/item.service";
+import {OnlineService} from "../services/online.service";
+import {MessageService} from "../services/message.service";
+import {getMessaging} from "firebase/messaging";
+import {firebaseConfig} from "../firebase.config";
+import {ItemStore} from "./item-store";
+import {ListStore} from "./list-store";
+import {AuthStore} from "./auth-store";
+import {UiStore} from "./ui-store";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyBYzkfzpJ4t1AvyNWZKSwr2vF4laPa9v-8",
-  authDomain: "ikaufzetteli.firebaseapp.com",
-  databaseURL: "https://ikaufzetteli.firebaseio.com",
-  projectId: "ikaufzetteli",
-  storageBucket: "ikaufzetteli.appspot.com",
-  messagingSenderId: "477279744354",
-  appId: "1:477279744354:web:2fff0adf68cbc535bdbc3b",
-};
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
@@ -40,7 +26,7 @@ export class RootStore {
   authService: AuthService;
   itemService: ItemService;
   onlineService: OnlineService;
-  uiStore: UIStore;
+  uiStore: UiStore;
   messageService: MessageService;
 
   constructor() {
@@ -48,16 +34,8 @@ export class RootStore {
     const auth = getAuth(app);
     const messaging = getMessaging(app);
 
-    this.listService = new ListService(
-      this,
-      db,
-      auth as unknown as firebase.auth.Auth
-    ); // TODO
-    this.itemService = new ItemService(
-      this,
-      db,
-      auth as unknown as firebase.auth.Auth
-    ); // TODO
+    this.listService = new ListService( this, db, auth );
+    this.itemService = new ItemService( this, db, auth );
 
     this.listStore = new ListStore(this);
     this.itemStore = new ItemStore(this);
@@ -66,112 +44,11 @@ export class RootStore {
     this.authService = new AuthService(auth, this);
 
     this.onlineService = new OnlineService(this);
-    this.uiStore = new UIStore(this);
+    this.uiStore = new UiStore(this);
+
+    this.onlineService.init();
 
     this.messageService = new MessageService(messaging, this, db);
-  }
-}
-
-class ItemStore {
-  public items: { [key: string]: Item } = observable({});
-
-  constructor(private rootStore: RootStore) {
-    makeAutoObservable(this);
-
-    autorun(() => {
-      rootStore.listStore.currentListId &&
-        rootStore.itemService.getFromList(rootStore.listStore.currentListId);
-    });
-  }
-
-  add(items: Item[]) {
-    items.forEach((x) => {
-      this.items[x.id!] = x;
-    });
-  }
-
-  remove(items: Item[]) {
-    items.forEach((x) => {
-      delete this.items[x.id!];
-    });
-  }
-
-  clear() {
-    this.items = {}; // TODO .clear()
-  }
-}
-
-class ListStore {
-  public currentListId?: string;
-  public items: IObservableArray<List> = observable([]);
-  constructor(private rootStore: RootStore) {
-    makeAutoObservable(this);
-  }
-
-  setCurrentList(id: string | undefined) {
-    this.currentListId = id;
-  }
-
-  setList(items: List[]) {
-    this.items.replace(items);
-  }
-}
-
-export class AuthStore {
-  public currentUser?: User;
-  constructor(private rootStore: RootStore) {
-    makeAutoObservable(this);
-  }
-
-  setUser(user: User) {
-    this.currentUser = { ...user };
-  }
-
-  get isConnected() {
-    return !!this.currentUser?.email;
-  }
-
-  get displayName() {
-    return (
-      this.currentUser?.displayName ||
-      this.currentUser?.email ||
-      this.currentUser?.uid.substring(0, 10)
-    );
-  }
-}
-
-export class UIStore {
-  public online: boolean;
-  public showListEdit: boolean;
-  public message: Message;
-  public notificationAccess: boolean;
-
-  constructor(private rootStore: RootStore) {
-    makeAutoObservable(this);
-    this.online = navigator.onLine;
-    this.showListEdit = false;
-    this.message = { show: false, text: "", severity: Severity.info };
-    this.notificationAccess = false;
-  }
-
-  setOnlineStatus(status: boolean) {
-    this.online = status;
-  }
-
-  toggleListEdit() {
-    this.showListEdit = !this.showListEdit;
-  }
-
-  setMessage(message: Message) {
-    this.message = message;
-  }
-  resetMessage = () => {
-    this.message.show = false;
-    this.message.text = "false";
-  };
-
-  setNotificationAccess(access: boolean) {
-    this.notificationAccess = access;
   }
 }
 

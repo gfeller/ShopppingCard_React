@@ -32,7 +32,6 @@ export class AuthService {
         const user = usercred.user;
         this.rootStore.uiStore.setMessage({
           text: "Account mit Email verbunden.",
-          show: true,
           severity: Severity.success,
         });
         this.rootStore.authStore.setUser(user);
@@ -40,7 +39,6 @@ export class AuthService {
       .catch((error) => {
         this.rootStore.uiStore.setMessage({
           text: "Account verbindung fehlgeschlagen",
-          show: true,
           severity: Severity.error,
         });
       });
@@ -53,7 +51,6 @@ export class AuthService {
         const user = userCredential.user;
         this.rootStore.uiStore.setMessage({
           text: "Angemeldet",
-          show: true,
           severity: Severity.success,
         });
         this.rootStore.authStore.setUser(user);
@@ -62,7 +59,6 @@ export class AuthService {
       .catch((error) => {
         this.rootStore.uiStore.setMessage({
           text: "Anmeldung fehlgeschlagen",
-          show: true,
           severity: Severity.error,
         });
       });

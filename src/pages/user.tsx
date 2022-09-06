@@ -46,14 +46,12 @@ export const User = observer(() => {
         .then(() => {
           store.uiStore.setMessage({
             text: "Email wurde verschickt",
-            show: true,
             severity: Severity.success,
           });
         })
         .catch(() => {
           store.uiStore.setMessage({
             text: "Email konnte nicht verschickt werden",
-            show: true,
             severity: Severity.error,
           });
         });
@@ -73,14 +71,12 @@ export const User = observer(() => {
         store.authStore.setUser(store.authService.auth.currentUser!);
         store.uiStore.setMessage({
           text: "Anzeigename wurde geändert",
-          show: true,
           severity: Severity.success,
         });
       })
       .catch((error: Error) => {
         store.uiStore.setMessage({
           text: error.message,
-          show: true,
           severity: Severity.error,
         });
       });
@@ -99,14 +95,12 @@ export const User = observer(() => {
         store.authStore.setUser(store.authService.auth.currentUser!);
         store.uiStore.setMessage({
           text: "Password wurde geändert",
-          show: true,
           severity: Severity.success,
         });
       })
       .catch((error: Error) => {
         store.uiStore.setMessage({
           text: error.message,
-          show: true,
           severity: Severity.error,
         });
       });

@@ -35,13 +35,11 @@ export const Appbar = observer(() => {
     try {
       await navigator.share(shareData);
       store.uiStore.setMessage({
-        show: true,
         text: "Der Link wurde erstellt.",
         severity: Severity.success,
       });
     } catch (err) {
       store.uiStore.setMessage({
-        show: true,
         text: "Der Browser unterstützt die Funktion nicht.",
         severity: Severity.error,
       });
@@ -85,6 +83,7 @@ export const Appbar = observer(() => {
 
           <div style={{ display: "flex", alignItems: "center" }}>
             <Button
+              data-testid="login-name"
               sx={{ textTransform: "none" }}
               color="inherit"
               startIcon={

@@ -29,6 +29,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import "./shopping-list.css";
 import moment from "moment";
+import {ConfirmButton} from "../components/confirm-button";
 
 export const ShoppingList = observer(() => {
   const store = useRootStore();
@@ -296,13 +297,7 @@ export const ShoppingList = observer(() => {
             >
               Änderungen übernehmen
             </Button>
-            <Button
-              sx={{ color: "red" }}
-              startIcon={<DeleteIcon />}
-              onClick={deleteList}
-            >
-              {deleteOptions[confirmDelete]}
-            </Button>
+            <ConfirmButton label="Liste" deleteFn={deleteList}></ConfirmButton>
             <Button onClick={() => handleEditClose(false)}>Abbruch</Button>
           </div>
         </DialogContent>

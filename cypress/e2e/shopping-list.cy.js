@@ -4,22 +4,21 @@ describe("shopping-list", () => {
   beforeEach(() => {
     cy.clearCookies();
     cy.visit("http://localhost:3000");
+    cy.wait(500);
+    //cy.get('[data-testid="login-name"]').should('have.text')
   });
 
-  it("open add new list dialog", () => {
-    cy.get(".addNewList").click();
-    cy.get("h2").should("have.text", "Neue Liste erfassen");
-  });
 
-  it("add new list", () => {
+  it("add / remove new list", () => {
     cy.get(".addNewList").click();
     cy.get("input").type("Test list");
     cy.get('[data-testid="createNewList"]').click();
     cy.get('[data-testid="Test list"]').should("exist");
-  });
 
-  it("edit list", () => {
-    cy.get('[data-testid="Test list"]').click();
-    cy.get(`[aria-label="edit"]`).click();
+    cy.get('[data-testid="Test list"]').first().click();
+    cy.get(`[aria-label="edit"]`).first().click();
+
+    cy.contains("Liste löschen").click()
+    cy.contains("Löschen bestätigen").click()
   });
 });

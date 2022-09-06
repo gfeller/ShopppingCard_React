@@ -3,17 +3,16 @@ import {BaseService} from './base.service';
 
 import {addDoc, doc, Firestore, onSnapshot, setDoc, where} from 'firebase/firestore';
 
-import firebase from "firebase/compat";
 
 import {RootStore} from "../state/root-store";
+import {Auth} from "@firebase/auth";
 
 
 export class ListService extends BaseService<List> {
 
 
-  constructor(rootStore: RootStore, db: Firestore, public afAuth: firebase.auth.Auth) {
+  constructor(rootStore: RootStore, db: Firestore, public afAuth: Auth) {
     super('list', db);
-
 
     afAuth.onAuthStateChanged((user) => {
       if (user !== null) {

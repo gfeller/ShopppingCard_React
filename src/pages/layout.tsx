@@ -13,6 +13,7 @@ export const Layout = observer(() => {
   return (
     <div className="layout">
       <Snackbar
+        anchorOrigin={{horizontal: "right", vertical: "top"}}
         open={store.uiStore.message.show}
         autoHideDuration={6000}
         onClose={store.uiStore.resetMessage}

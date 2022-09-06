@@ -10,14 +10,14 @@ import {
   DocumentChange,
 } from "firebase/firestore";
 import { RootStore } from "../state/root-store";
-import firebase from "firebase/compat";
 import moment from "moment";
+import {Auth} from "@firebase/auth";
 
 export class ItemService extends BaseService<Item> {
   constructor(
     private rootStore: RootStore,
     db: Firestore,
-    public afAuth: firebase.auth.Auth
+    public afAuth: Auth
   ) {
     super("item", db);
   }
@@ -25,7 +25,6 @@ export class ItemService extends BaseService<Item> {
   getFromList(id?: string) {
     this.clearSubscription();
 
-    // debugger;
     if (!id) {
       this.rootStore.itemStore && this.rootStore.itemStore.clear();
       return;

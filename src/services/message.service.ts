@@ -60,7 +60,6 @@ export class MessageService {
     const user = this.rootStore.authStore.currentUser;
     deleteDoc(doc(collection(this.db, "fcmTokens"), user!.uid));
     this.rootStore.uiStore.setMessage({
-      show: true,
       text: "Erfolgreich abgemeldet.",
       severity: Severity.info,
     });
@@ -75,7 +74,6 @@ export class MessageService {
         }
         if (value === "denied") {
           this.rootStore.uiStore.setMessage({
-            show: true,
             text: "Benachrichtigen wurden permanent im Browser deaktiviert. Aktivieren Sie diese manuell.",
             severity: Severity.info,
           });
@@ -85,7 +83,6 @@ export class MessageService {
       })
       .then((token) => {
         this.rootStore.uiStore.setMessage({
-          show: true,
           text: "Danke für Ihre Zustimmung.",
           severity: Severity.info,
         });
@@ -112,7 +109,6 @@ export class MessageService {
     if (this.messaging != null) {
       onMessage(this.messaging, (payload) => {
         this.rootStore.uiStore.setMessage({
-          show: true,
           text: payload.notification?.body as string | "",
           severity: Severity.info,
         });
