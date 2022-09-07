@@ -55,7 +55,7 @@ export const ShoppingList = observer(() => {
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (newItem && store.listStore.currentListId)
-      store.itemService.add(new Item(newItem, store.listStore.currentListId));
+      store.itemService.add(new Item({description: newItem, listId: store.listStore.currentListId}));
     setNewItem("");
   };
 

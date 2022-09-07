@@ -1,11 +1,8 @@
-/// <reference types="cypress" />
-/* eslint-disable */
+
 describe("shopping-list", () => {
   beforeEach(() => {
     cy.clearCookies();
     cy.visit("http://localhost:3000");
-    cy.wait(500);
-    //cy.get('[data-testid="login-name"]').should('have.text')
   });
 
 

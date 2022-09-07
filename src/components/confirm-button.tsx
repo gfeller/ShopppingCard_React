@@ -10,7 +10,6 @@ export const ConfirmButton = ({label, deleteFn} : {label: string, deleteFn : () 
 
   const onDelete = () => {
     if (state) {
-      debugger;
       deleteFn();
     }
     setState(true)

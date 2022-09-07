@@ -9,7 +9,7 @@ import LinkIcon from "@mui/icons-material/Link";
 import {useRootStore} from "../state/root-store";
 import LinkOffIcon from "@mui/icons-material/LinkOff";
 import {useNavigate} from "react-router-dom";
-import {Severity} from "../interfaces/message";
+import {Severity} from "../model/message";
 
 export const Appbar = observer(() => {
   const store = useRootStore();
@@ -46,47 +46,21 @@ export const Appbar = observer(() => {
     <>
       <AppBar position="static">
         <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="home"
-            sx={{ mr: 2 }}
-            onClick={navigateHome}
-          >
+          <IconButton size="large" edge="start" color="inherit" aria-label="home" sx={{ mr: 2 }} onClick={navigateHome}>
             <HomeIcon />
           </IconButton>
 
           {store.listStore.currentListId && (
             <div>
-              <IconButton
-                color="inherit"
-                aria-label="share"
-                onClick={() => shareList()}
-              >
-                <Shareicon />
-              </IconButton>
-
-              <IconButton
-                color="inherit"
-                aria-label="edit"
-                onClick={() => store.uiStore.toggleListEdit()}
-              >
-                <Editicon />
-              </IconButton>
+              <IconButton color="inherit" aria-label="share" onClick={() => shareList()}><Shareicon /></IconButton>
+              <IconButton color="inherit" aria-label="edit" onClick={() => store.uiStore.toggleListEdit()} ><Editicon /></IconButton>
             </div>
           )}
 
           <div style={{ display: "flex", alignItems: "center" }}>
-            <Button
-              data-testid="login-name"
-              sx={{ textTransform: "none" }}
-              color="inherit"
-              startIcon={
-                store.authStore.isConnected ? <LinkIcon /> : <LinkOffIcon />
-              }
-              onClick={navigateUser}
-            >
+            <Button data-testid="login-name" sx={{ textTransform: "none" }} color="inherit"
+                    startIcon={ store.authStore.isConnected ? <LinkIcon /> : <LinkOffIcon /> }
+                    onClick={navigateUser}>
               {store.authStore.displayName}
             </Button>
             {store.uiStore.online ? <CloudQueueIcon /> : <CloudOffIcon />}
@@ -96,3 +70,6 @@ export const Appbar = observer(() => {
     </>
   );
 });
+
+
+

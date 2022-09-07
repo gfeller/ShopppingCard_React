@@ -1,7 +1,7 @@
 import {Button, Card, CardActions, CardContent, TextField, Typography,} from "@mui/material";
 import {observer} from "mobx-react-lite";
 import React, {FormEvent, useEffect, useState} from "react";
-import {Severity} from "../interfaces/message";
+import {Severity} from "../model/message";
 import {useRootStore} from "../state/root-store";
 import "./user.css";
 import {OnlyAnonymous, OnlyUser} from "../components/only-user";
@@ -23,7 +23,7 @@ export const User = observer(() => {
 
   const connectUser = (event: FormEvent) => {
     event.preventDefault();
-    if ((event.nativeEvent as any).submitter.value === "true") {
+    if ((event.nativeEvent as any).submitter.value === "create") {
       store.authService.connectUser({ email, pwd });
     } else {
       store.authService.login({ email, pwd });
@@ -53,15 +53,10 @@ export const User = observer(() => {
 
   const changeDisplayname = (event: FormEvent) => {
     event.preventDefault();
-    store.authService
-      .changeUser({
-        displayName,
-        pwd: "",
-        pwdOld: "",
-        email: "",
+    store.authService.changeUser({
+        displayName
       })()
       .then(() => {
-        store.authStore.setUser(store.authService.auth.currentUser!);
         store.uiStore.setMessage({
           text: "Anzeigename wurde geändert",
           severity: Severity.success,
@@ -79,13 +74,11 @@ export const User = observer(() => {
     event.preventDefault();
     store.authService
       .changeUser({
-        displayName: store.authStore.currentUser?.displayName || "",
         pwd: newPwd,
         pwdOld: oldPwd,
         email: store.authStore.currentUser!.email!,
       })()
       .then(() => {
-        store.authStore.setUser(store.authService.auth.currentUser!);
         store.uiStore.setMessage({
           text: "Password wurde geändert",
           severity: Severity.success,
@@ -125,10 +118,10 @@ export const User = observer(() => {
                   <TextField variant="outlined" type="email" label="E-Mail" className="textField" value={email} onChange={(e) => setEmail(e.target.value)} name="email" required />
                   <TextField variant="outlined" type="password" label="Passwort" className="textField" value={pwd} onChange={(e) => setPassword(e.target.value)} name="password" required/>
                   <div style={{ paddingTop: "10px" }}>
-                    <Button type="submit" value="true">
+                    <Button type="submit" value="create">
                       Neuer Account Erstellen
                     </Button>
-                    <Button type="submit" value="false">
+                    <Button type="submit" value="register">
                       Anmelden
                     </Button>
                   </div>

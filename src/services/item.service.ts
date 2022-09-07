@@ -1,4 +1,4 @@
-import {Item} from "../model/item";
+import {IItem, Item} from "../model/item";
 
 import {BaseService} from "./base.service";
 
@@ -6,8 +6,9 @@ import {DocumentChange, Firestore, onSnapshot, Timestamp, where,} from "firebase
 import {RootStore} from "../state/root-store";
 import moment from "moment";
 import {Auth} from "@firebase/auth";
+import {List} from "../model/list";
 
-export class ItemService extends BaseService<Item> {
+export class ItemService extends BaseService<IItem> {
   constructor(
     private rootStore: RootStore,
     db: Firestore,
@@ -45,7 +46,7 @@ export class ItemService extends BaseService<Item> {
     );
   }
 
-  async add(item: Item) {
+  async add(item: IItem) {
     item = { ...item };
     item.boughtAt = null;
     item.createdAt = Timestamp.now();
@@ -54,10 +55,10 @@ export class ItemService extends BaseService<Item> {
     return super.add(item);
   }
 
-  listChanged(id: string, items: DocumentChange<Item>[]) {
+  listChanged(id: string, items: DocumentChange<IItem>[]) {
     let type: string = "";
     let counter = -1;
-    const toSend: DocumentChange<Item>[][] = [];
+    const toSend: DocumentChange<IItem>[][] = [];
 
     for (const item of items) {
       if (type !== item.type) {
@@ -71,13 +72,13 @@ export class ItemService extends BaseService<Item> {
       if (action[0].type === "added" || action[0].type === "modified") {
         this.rootStore.itemStore.add(
           action.map(
-            (item) => ({ id: item.doc.id, ...item.doc.data() } as Item)
+            (item) => ( new Item({ id: item.doc.id, ...item.doc.data() }))
           )
         );
       } else if (action[0].type === "removed") {
         this.rootStore.itemStore.remove(
           action.map(
-            (item) => ({ id: item.doc.id, ...item.doc.data() } as Item)
+            (item) => (new Item({ id: item.doc.id, ...item.doc.data() }))
           )
         );
       }

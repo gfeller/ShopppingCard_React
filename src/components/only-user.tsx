@@ -9,7 +9,6 @@ export const OnlyUser = observer(({children} : {children : ReactElement}) => {
     return <>{children}</>
   }
   return <></>
-
 });
 
 export const OnlyAnonymous = observer(({children} : {children : ReactElement}) => {
@@ -18,6 +17,5 @@ export const OnlyAnonymous = observer(({children} : {children : ReactElement}) =
     return <>{children}</>
   }
   return <></>
-
 });
 

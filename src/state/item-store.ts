@@ -27,6 +27,6 @@ export class ItemStore {
     }
 
     clear() {
-        this.items = {}; // TODO .clear()
+        this.items = {};
     }
 }

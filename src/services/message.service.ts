@@ -1,7 +1,7 @@
 import {collection, deleteDoc, doc, Firestore, getDoc, setDoc,} from "firebase/firestore";
 import {deleteToken, getToken, Messaging, onMessage,} from "firebase/messaging";
 import {observe} from "mobx";
-import {Severity} from "../interfaces/message";
+import {Severity} from "../model/message";
 import {RootStore} from "../state/root-store";
 
 export class MessageService {

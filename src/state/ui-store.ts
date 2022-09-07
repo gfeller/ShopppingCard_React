@@ -1,4 +1,4 @@
-import {Message, Severity} from "../interfaces/message";
+import {Message, Severity} from "../model/message";
 import {makeAutoObservable} from "mobx";
 import {RootStore} from "./root-store";
 
@@ -20,7 +20,6 @@ export class UiStore {
 
     constructor(private rootStore: RootStore) {
         makeAutoObservable(this);
-
     }
 
     toggleListEdit() {
