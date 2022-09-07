@@ -1,13 +1,13 @@
 import {ListService} from "../services/list.service";
 import {initializeApp} from "firebase/app";
-import {getFirestore} from "firebase/firestore";
+import {getFirestore, enableIndexedDbPersistence} from "firebase/firestore";
 import {getAuth} from "firebase/auth";
 import {createContext, useContext} from "react";
 import {AuthService} from "../services/auth.service";
 import {ItemService} from "../services/item.service";
 import {OnlineService} from "../services/online.service";
 import {MessageService} from "../services/message.service";
-import {getMessaging} from "firebase/messaging";
+import {getMessaging} from "firebase/messaging/sw";
 import {firebaseConfig} from "../firebase.config";
 import {ItemStore} from "./item-store";
 import {ListStore} from "./list-store";
@@ -35,6 +35,22 @@ export class RootStore {
 
   constructor() {
     const db = getFirestore(app);
+
+    /* if needed!
+    enableIndexedDbPersistence(db)
+        .catch((err) => {
+          if (err.code === 'failed-precondition') {
+            // Multiple tabs open, persistence can only be enabled
+            // in one tab at a a time.
+            // ...
+          } else if (err.code === 'unimplemented') {
+            // The current browser does not support all of the
+            // features required to enable persistence
+            // ...
+          }
+        });
+    */
+
     const auth = getAuth(app);
     const messaging = getMessaging(app);
 
@@ -50,9 +66,9 @@ export class RootStore {
     this.onlineService = new OnlineService(this);
     this.uiStore = new UiStore(this);
 
-    this.onlineService.init();
-
     this.messageService = new MessageService(messaging, this, db);
+
+    this.onlineService.init();
   }
 }
 

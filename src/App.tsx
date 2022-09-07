@@ -34,17 +34,10 @@ const AppObserver = observer(() => {
   );
 });
 
-function App() {
-  const [store, setStore] = useState<RootStore>();
-
-  useEffect(() => {
-    const store = new RootStore();
-    setStore(store);
-  }, []);
-
-  if (store) {
+function App({rootStore} : {rootStore: RootStore}) {
+  if (rootStore) {
     return (
-      <StoreRootProvider value={store}>
+      <StoreRootProvider value={rootStore}>
         <AppObserver />
       </StoreRootProvider>
     );
