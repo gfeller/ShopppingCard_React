@@ -6,7 +6,6 @@ import {DocumentChange, Firestore, onSnapshot, Timestamp, where,} from "firebase
 import {RootStore} from "../state/root-store";
 import moment from "moment";
 import {Auth} from "@firebase/auth";
-import {List} from "../model/list";
 
 export class ItemService extends BaseService<IItem> {
   constructor(
