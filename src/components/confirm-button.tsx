@@ -6,7 +6,7 @@ import {useTmpState} from "../hooks/use-temp-state";
 
 
 export const ConfirmButton = ({label, deleteFn} : {label: string, deleteFn : () => void}) => {
-  const {state, setState} = useTmpState(false, 5000);
+  const {state, setState} = useTmpState(false, 3000);
 
   const onDelete = () => {
     if (state) {

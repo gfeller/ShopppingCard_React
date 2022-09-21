@@ -36,7 +36,8 @@
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
     "cypress:start": "start-server-and-test start http://localhost:3000 cypress:open",
-    "cypress:ci": "start-server-and-test start http://localhost:3000 cypress:run"
+    "cypress:ci": "start-server-and-test start http://localhost:3000 cypress:run",
+    "deploy:hosting": "firebase deploy --only hosting"
   },
   "eslintConfig": {
     "extends": [
