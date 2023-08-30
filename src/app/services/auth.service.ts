@@ -10,7 +10,6 @@ export class AuthService {
     
     auth.onAuthStateChanged((user: User | null) => {
       if (user === null) {
-        debugger
         signInAnonymously(auth);
       } else {
         rootStore.authStore.setUser(user);

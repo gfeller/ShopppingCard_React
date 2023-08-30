@@ -55,7 +55,7 @@ export class ItemService extends BaseService<IItem> {
   }
 
   listChanged(id: string, items: DocumentChange<IItem>[]) {
-    let type: string = "";
+    let type = "";
     let counter = -1;
     const toSend: DocumentChange<IItem>[][] = [];
 

@@ -16,8 +16,6 @@ import {UiStore} from "./ui-store";
 import {makeAutoObservable} from "mobx";
 
 
-// Initialize Firebase
-
 
 export class RootStore {
   itemStore: ItemStore;
@@ -36,6 +34,7 @@ export class RootStore {
 
   constructor() {
     makeAutoObservable(this);
+
     const app = initializeApp(firebaseConfig);
 
     const db = getFirestore(app);

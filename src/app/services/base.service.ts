@@ -16,15 +16,15 @@ export abstract class BaseService<T extends DTO> {
   }
 
   get collection() {
-    return collection(this.db, this.collectionName) as CollectionReference<T, T>;
+    return collection(this.db, this.collectionName) as CollectionReference<T, T>; // HACK because no collection<T, T>
   }
 
   collectionQuery(...queryConstraints: QueryConstraint[]) {
-    const baseCollection = collection(this.db, this.collectionName);
+    const baseCollection = this.collection;
     return query<T, T>(
-      baseCollection as CollectionReference<T, T>,
-      ...queryConstraints
-    ); // HACK because no collection<T>
+        baseCollection,
+        ...queryConstraints
+    );
   }
 
   getDoc(id: string) {
@@ -32,7 +32,7 @@ export abstract class BaseService<T extends DTO> {
   }
 
   async add(item: T) {
-    return addDoc(this.collection, item as DocumentData); // HACK because no collection<T>
+    return addDoc(this.collection, item as DocumentData);
   }
 
   update(item: T) {

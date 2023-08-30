@@ -21,8 +21,8 @@ export const ShoppingList = observer(() => {
   const [open, setOpen] = React.useState(false);
   const [text, setText] = React.useState<string>("");
   const [newItem, setNewItem] = React.useState("");
-  let navigate = useNavigate();
-  let urlParams = useParams();
+  const navigate = useNavigate();
+  const urlParams = useParams();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -44,7 +44,7 @@ export const ShoppingList = observer(() => {
     store.uiStore.toggleListEdit();
     if (!save) return;
     if (text !== "") {
-      let list = store.listStore.items.find(
+      const list = store.listStore.items.find(
         (x) => x.id === store.listStore.currentListId
       );
       list!.description = newText;

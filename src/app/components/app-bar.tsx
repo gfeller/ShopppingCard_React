@@ -25,7 +25,7 @@ export const Appbar = observer(() => {
     navigate("/user");
   };
 
-  let shareData = {
+  const shareData = {
     title: "Use this link to share this list",
     text: "Add a shared List",
     url: window.location.pathname.replace("list", "share"),
