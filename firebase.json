@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "build",
+    "public": "dist/shopping-app-react-2",
     "ignore": [
       "firebase.json",
       "**/.*",
