@@ -57,7 +57,6 @@ export class MessageService {
   requestPermission = () => {
     Notification.requestPermission()
         .then((value: string) => {
-          ;
           if (value === "default") {
             return Promise.reject(value);
           }
@@ -91,7 +90,6 @@ export class MessageService {
   };
 
   async removePermission() {
-
     await deleteToken(this.messaging);
     await this.removeToken();
   }
