@@ -1,29 +1,29 @@
-import {Button, Card, CardActions, CardContent, TextField, Typography,} from "@mui/material";
-import {observer} from "mobx-react-lite";
-import React, {FormEvent, useEffect, useState} from "react";
-import {Severity} from "../model/message";
-import {useRootStore} from "../state/root-store";
-import "./user.css";
-import {OnlyAnonymous, OnlyUser} from "../components/only-user";
+import { Button, Card, CardActions, CardContent, TextField, Typography } from '@mui/material';
+import { observer } from 'mobx-react-lite';
+import React, { FormEvent, useEffect, useState } from 'react';
+import { Severity } from '../model/message';
+import { useRootStore } from '../state/root-store';
+import './user.css';
+import { OnlyAnonymous, OnlyUser } from '../components/only-user';
 
 export const User = observer(() => {
   const store = useRootStore();
 
-  const [email, setEmail] = useState("");
-  const [pwd, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [pwd, setPassword] = useState('');
 
-  const [displayName, setDisplayName] = useState("");
+  const [displayName, setDisplayName] = useState('');
 
-  const [oldPwd, setOldPwd] = useState("");
-  const [newPwd, setNewPwd] = useState("");
+  const [oldPwd, setOldPwd] = useState('');
+  const [newPwd, setNewPwd] = useState('');
 
   useEffect(() => {
-    setDisplayName(store.authStore.displayName || "");
+    setDisplayName(store.authStore.displayName || '');
   }, [store.authStore.displayName]);
 
   const connectUser = (event: FormEvent) => {
     event.preventDefault();
-    if ((event.nativeEvent as any).submitter.value === "create") {
+    if ((event.nativeEvent as any).submitter.value === 'create') {
       store.authService.connectUser({ email, pwd });
     } else {
       store.authService.login({ email, pwd });
@@ -38,14 +38,14 @@ export const User = observer(() => {
         .resetPwdMail(email)
         .then(() => {
           store.uiStore.setMessage({
-            text: "Email wurde verschickt",
-            severity: Severity.success,
+            text: 'Email wurde verschickt',
+            severity: Severity.success
           });
         })
         .catch(() => {
           store.uiStore.setMessage({
-            text: "Email konnte nicht verschickt werden",
-            severity: Severity.error,
+            text: 'Email konnte nicht verschickt werden',
+            severity: Severity.error
           });
         });
     }
@@ -53,20 +53,11 @@ export const User = observer(() => {
 
   const changeDisplayname = (event: FormEvent) => {
     event.preventDefault();
-    store.authService.changeUser({
-        displayName
-      })()
-      .then(() => {
-        store.uiStore.setMessage({
-          text: "Anzeigename wurde geändert",
-          severity: Severity.success,
-        });
-      })
+    store.authService.changeUser({ displayName })().then(() => {
+      store.uiStore.setMessage({ text: 'Anzeigename wurde geändert', severity: Severity.success });
+    })
       .catch((error: Error) => {
-        store.uiStore.setMessage({
-          text: error.message,
-          severity: Severity.error,
-        });
+        store.uiStore.setMessage({ text: error.message, severity: Severity.error });
       });
   };
 
@@ -76,18 +67,18 @@ export const User = observer(() => {
       .changeUser({
         pwd: newPwd,
         pwdOld: oldPwd,
-        email: store.authStore.currentUser!.email!,
+        email: store.authStore.currentUser!.email!
       })()
       .then(() => {
         store.uiStore.setMessage({
-          text: "Password wurde geändert",
-          severity: Severity.success,
+          text: 'Password wurde geändert',
+          severity: Severity.success
         });
       })
       .catch((error: Error) => {
         store.uiStore.setMessage({
           text: error.message,
-          severity: Severity.error,
+          severity: Severity.error
         });
       });
   };
@@ -96,8 +87,8 @@ export const User = observer(() => {
     <>
       <div
         style={{
-          padding: "10px",
-          textAlign: "start",
+          padding: '10px',
+          textAlign: 'start'
         }}
       >
         <Typography variant="h5">Benutzer Informationen</Typography>
@@ -113,11 +104,11 @@ export const User = observer(() => {
                 </Typography>
                 <form
                   onSubmit={connectUser}
-                  style={{ display: "flex", flexDirection: "column", alignItems: "start"}}
+                  style={{ display: 'flex', flexDirection: 'column', alignItems: 'start' }}
                 >
                   <TextField variant="outlined" type="email" label="E-Mail" className="textField" value={email} onChange={(e) => setEmail(e.target.value)} name="email" required />
-                  <TextField variant="outlined" type="password" label="Passwort" className="textField" value={pwd} onChange={(e) => setPassword(e.target.value)} name="password" required/>
-                  <div style={{ paddingTop: "10px" }}>
+                  <TextField variant="outlined" type="password" label="Passwort" className="textField" value={pwd} onChange={(e) => setPassword(e.target.value)} name="password" required />
+                  <div style={{ paddingTop: '10px' }}>
                     <Button type="submit" value="create">
                       Neuer Account Erstellen
                     </Button>
@@ -136,7 +127,7 @@ export const User = observer(() => {
                   Anzeigename ändern
                 </Typography>
                 <form
-                  style={{ display: "flex", flexDirection: "column", alignItems: "start", }}
+                  style={{ display: 'flex', flexDirection: 'column', alignItems: 'start' }}
                   onSubmit={changeDisplayname}
                 >
                   <TextField variant="outlined" type="email" label="E-mail" className="textField" value={store.authStore.currentUser?.email} disabled />
@@ -152,9 +143,9 @@ export const User = observer(() => {
                 <Typography className="cardTitel">Passwort ändern</Typography>
                 <form
                   style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "start",
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'start'
                   }}
                   onSubmit={changePwd}
                 >
@@ -171,7 +162,7 @@ export const User = observer(() => {
             <Card className="card">
               <CardContent>
                 <Typography className="cardTitel">Passwort vergessen?</Typography>
-                <form style={{ display: "flex", flexDirection: "column", alignItems: "start"}} onSubmit={resetPwd}>
+                <form style={{ display: 'flex', flexDirection: 'column', alignItems: 'start' }} onSubmit={resetPwd}>
                   <Button type="submit">Passwort zurücksetzen</Button>
                 </form>
               </CardContent>
@@ -195,8 +186,8 @@ export const User = observer(() => {
                 }
               >
                 {!store.uiStore.notificationAccess
-                  ? "Benachrichtigungen aktivieren"
-                  : " Keine Benachrichtigungen mehr erhalten."}
+                  ? 'Benachrichtigungen aktivieren'
+                  : ' Keine Benachrichtigungen mehr erhalten.'}
               </Button>
             </CardActions>
           </Card>
