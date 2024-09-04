@@ -53,12 +53,12 @@ export const User = observer(() => {
 
   const changeDisplayname = (event: FormEvent) => {
     event.preventDefault();
-    store.authService.changeUser({ displayName })().then(() => {
-      store.uiStore.setMessage({ text: 'Anzeigename wurde geändert', severity: Severity.success });
+    store.authService.changeUser({displayName})().then(() => {
+      store.uiStore.setMessage({text: 'Anzeigename wurde geändert', severity: Severity.success});
     })
-      .catch((error: Error) => {
-        store.uiStore.setMessage({ text: error.message, severity: Severity.error });
-      });
+        .catch((error: Error) => {
+          store.uiStore.setMessage({text: error.message, severity: Severity.error});
+        });
   };
 
   const changePwd = (event: FormEvent) => {

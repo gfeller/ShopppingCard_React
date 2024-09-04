@@ -62,8 +62,9 @@ export class AuthService {
       }
       if (data.email && data.pwd && data.pwdOld) {
         const cred = EmailAuthProvider.credential(data.email, data.pwdOld);
-        actions.push(reauthenticateWithCredential(currentUser, cred));
-        actions.push(updatePassword(currentUser, data.pwd));
+        actions.push(reauthenticateWithCredential(currentUser, cred).then(() => {
+          updatePassword(currentUser, data!.pwd!)
+        }));
       }
       return Promise.all(actions).then(() => {
         this.rootStore.authStore.setUser(this.auth.currentUser!);
