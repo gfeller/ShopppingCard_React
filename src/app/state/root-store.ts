@@ -6,16 +6,12 @@ import {createContext, useContext} from "react";
 import {AuthService} from "../services/auth.service";
 import {ItemService} from "../services/item.service";
 import {OnlineService} from "../services/online.service";
-import {MessageService} from "../services/message.service";
-import {getMessaging} from "firebase/messaging/sw";
 import {firebaseConfig} from "../firebase.config";
 import {ItemStore} from "./item-store";
 import {ListStore} from "./list-store";
 import {AuthStore} from "./auth-store";
 import {UiStore} from "./ui-store";
 import {makeAutoObservable} from "mobx";
-
-
 
 export class RootStore {
   itemStore: ItemStore;
@@ -26,7 +22,6 @@ export class RootStore {
   itemService: ItemService;
   onlineService: OnlineService;
   uiStore: UiStore;
-  messageService: MessageService;
 
   get init () {
     return this.authStore.currentUser;
@@ -40,7 +35,6 @@ export class RootStore {
     const db = getFirestore(app);
 
     const auth = getAuth(app);
-    const messaging = getMessaging(app);
 
     this.listService = new ListService( this, db, auth );
     this.itemService = new ItemService( this, db, auth );
@@ -53,8 +47,6 @@ export class RootStore {
 
     this.onlineService = new OnlineService(this);
     this.uiStore = new UiStore();
-
-    this.messageService = new MessageService(messaging, this, db);
 
     this.onlineService.init();
   }

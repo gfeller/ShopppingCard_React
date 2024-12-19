@@ -12,8 +12,9 @@ export const SharedList = observer(() => {
 
   const addSharedList = (add: boolean) => {
     if (params.id && add) {
-      store.listService.addShareList(params.id);
-      navigate(`/list/${params.id}`);
+      store.listService.addShareList(params.id).then(() => {
+        navigate(`/list/${params.id}`);
+      });
     } else {
       navigate(`/list`);
     }

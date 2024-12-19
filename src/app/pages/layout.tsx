@@ -4,13 +4,14 @@ import {Outlet} from "react-router-dom";
 import {Appbar} from "../components/app-bar";
 import {useRootStore} from "../state/root-store";
 
-import "./layout.css";
-
 export const Layout = observer(() => {
   const store = useRootStore();
 
   return (
-    <div className="layout">
+    <div className="grid h-dvh max-h-dvh" style={{
+        gridTemplateAreas: '"toolbar" "content"',
+        gridTemplateRows: "auto 1fr"
+    }}>
       <Snackbar
         anchorOrigin={{horizontal: "right", vertical: "top"}}
         open={store.uiStore.message.show}

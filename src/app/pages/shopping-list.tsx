@@ -13,7 +13,6 @@ import { useRootStore } from "../state/root-store";
 
 import moment from "moment";
 import { ConfirmButton } from "../components/confirm-button";
-import "./shopping-list.css";
 
 export const ShoppingList = observer(() => {
   const store = useRootStore();
@@ -110,7 +109,7 @@ export const ShoppingList = observer(() => {
                         <ListItem
                           disablePadding
                           key={item.id}
-                          className={item.boughtAt ? "bought" : ""}
+                          className={item.boughtAt ? "opacity-50" : ""}
                         >
                           <ListItemButton onClick={() => handleBuyItem(item)}>
                             {item.boughtAt ? (

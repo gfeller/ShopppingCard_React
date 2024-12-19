@@ -13,7 +13,6 @@ export class UiStore {
     }
 
     public showListEdit: boolean = false;
-    public notificationAccess: boolean = false;
 
     public readonly message: Message = {show: false, text: "", severity: Severity.info};
 
@@ -34,8 +33,4 @@ export class UiStore {
     resetMessage = () => {
         this.message.show = false;
     };
-
-    setNotificationAccess(access: boolean) {
-        this.notificationAccess = access;
-    }
 }

@@ -47,28 +47,26 @@ export class AuthService {
     return sendPasswordResetEmail(this.auth, email);
   }
 
-  changeUser(data: Partial<AuthUserSettingsChange>) {
-    return async () => {
-      const currentUser = this.auth.currentUser!;
-      const actions = [] as Array<Promise<unknown>>;
+  async changeUser(data: Partial<AuthUserSettingsChange>) {
+    const currentUser = this.auth.currentUser!;
+    const actions = [] as Array<Promise<unknown>>;
 
-      if (data.displayName && data.displayName !== currentUser.displayName) {
-        actions.push(
-          updateProfile(currentUser, {
-            displayName: data.displayName,
-            photoURL: "",
-          })
-        );
-      }
-      if (data.email && data.pwd && data.pwdOld) {
-        const cred = EmailAuthProvider.credential(data.email, data.pwdOld);
-        actions.push(reauthenticateWithCredential(currentUser, cred).then(() => {
-          updatePassword(currentUser, data!.pwd!)
-        }));
-      }
-      return Promise.all(actions).then(() => {
-        this.rootStore.authStore.setUser(this.auth.currentUser!);
-      });
-    };
-  }
+    if (data.displayName && data.displayName !== currentUser.displayName) {
+      actions.push(
+        updateProfile(currentUser, {
+          displayName: data.displayName,
+          photoURL: "",
+        })
+      );
+    }
+    if (data.email && data.pwd && data.pwdOld) {
+      const cred = EmailAuthProvider.credential(data.email, data.pwdOld);
+      actions.push(reauthenticateWithCredential(currentUser, cred).then(() => {
+        updatePassword(currentUser, data!.pwd!)
+      }));
+    }
+    return Promise.all(actions).then(() => {
+      this.rootStore.authStore.setUser(this.auth.currentUser!);
+    });
+  };
 }
