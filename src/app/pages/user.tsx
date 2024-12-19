@@ -1,6 +1,6 @@
 import { Button, Card, CardActions, CardContent, TextField, Typography } from '@mui/material';
 import { observer } from 'mobx-react-lite';
-import React, { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { Severity } from '../model/message';
 import { useRootStore } from '../state/root-store';
 import './user.css';
@@ -23,7 +23,9 @@ export const User = observer(() => {
 
   const connectUser = (event: FormEvent) => {
     event.preventDefault();
-    if ((event.nativeEvent as any).submitter.value === 'create') {
+
+    const submitter = (event.nativeEvent as SubmitEvent)?.submitter as HTMLButtonElement;
+    if (submitter?.value === 'create') {
       store.authService.connectUser({ email, pwd });
     } else {
       store.authService.login({ email, pwd });

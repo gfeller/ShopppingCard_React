@@ -1,12 +1,11 @@
 import {IObservableArray, makeAutoObservable, observable} from "mobx";
-import {List} from "../model/list";
-import {RootStore} from "./root-store";
+import {List} from "../model/list"; 
 
 export class ListStore {
     public currentListId?: string;
     public items: IObservableArray<List> = observable([]);
 
-    constructor(private rootStore: RootStore) {
+    constructor() {
         makeAutoObservable(this);
     }
 

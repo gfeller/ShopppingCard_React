@@ -10,10 +10,10 @@ export class OnlineService {
     init(){
         this.rootStore.uiStore.online = navigator.onLine;
 
-        window.addEventListener('offline', (e) => {
+        window.addEventListener('offline', () => {
             this.rootStore.uiStore.online =  false;
         });
-        window.addEventListener('online', (e) => {
+        window.addEventListener('online', () => {
             this.rootStore.uiStore.online  = true;
         });
     }

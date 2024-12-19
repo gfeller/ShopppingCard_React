@@ -5,7 +5,7 @@ import {addDoc, doc, Firestore, onSnapshot, setDoc, where} from 'firebase/firest
 
 
 import {RootStore} from "../state/root-store";
-import {Auth} from "@firebase/auth";
+import {Auth} from "firebase/auth";
 
 
 export class ListService extends BaseService<IList> {

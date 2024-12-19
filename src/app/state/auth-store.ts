@@ -1,5 +1,4 @@
 import {makeAutoObservable} from "mobx";
-import {RootStore} from "./root-store";
 
 export interface IAuthUser{
     uid: string;
@@ -27,7 +26,7 @@ export class AuthUser implements IAuthUser{
 export class AuthStore {
     public currentUser?: AuthUser;
 
-    constructor(private rootStore: RootStore) {
+    constructor() {
         makeAutoObservable(this);
     }
 

@@ -6,6 +6,8 @@ import {RootStore} from "./app/state/root-store";
 
 const rootStore = new RootStore()
 
+import './styles.scss'; // Import your SCSS file here
+
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );

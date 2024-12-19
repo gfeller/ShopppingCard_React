@@ -1,4 +1,3 @@
-import React from "react";
 import {observer} from "mobx-react-lite";
 import {useNavigate, useParams} from "react-router-dom";
 import CheckIcon from "@mui/icons-material/Check";

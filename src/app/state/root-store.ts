@@ -45,14 +45,14 @@ export class RootStore {
     this.listService = new ListService( this, db, auth );
     this.itemService = new ItemService( this, db, auth );
 
-    this.listStore = new ListStore(this);
+    this.listStore = new ListStore();
     this.itemStore = new ItemStore(this);
 
-    this.authStore = new AuthStore(this);
+    this.authStore = new AuthStore();
     this.authService = new AuthService(auth, this);
 
     this.onlineService = new OnlineService(this);
-    this.uiStore = new UiStore(this);
+    this.uiStore = new UiStore();
 
     this.messageService = new MessageService(messaging, this, db);
 

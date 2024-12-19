@@ -1,4 +1,4 @@
-import React, {ReactElement} from "react";
+import {ReactElement} from "react";
 import {observer} from "mobx-react-lite";
 import {useRootStore} from "../state/root-store";
 

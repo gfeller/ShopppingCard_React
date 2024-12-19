@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from 'react';
 import './app.module.scss';
 import { RootStore, StoreRootProvider, useRootStore } from './state/root-store';
 import { observer } from 'mobx-react-lite';

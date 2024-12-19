@@ -1,4 +1,4 @@
-import {Auth, linkWithCredential, reauthenticateWithCredential, sendPasswordResetEmail, signInAnonymously, signInWithEmailAndPassword, updatePassword, updateProfile,} from "@firebase/auth";
+import {Auth, linkWithCredential, reauthenticateWithCredential, sendPasswordResetEmail, signInAnonymously, signInWithEmailAndPassword, updatePassword, updateProfile,} from "firebase/auth";
 
 import {EmailAuthProvider, User} from "firebase/auth";
 import {AuthConnect, AuthUserSettingsChange} from "../model/auth";
@@ -25,7 +25,7 @@ export class AuthService {
         this.rootStore.uiStore.setMessage({ text: "Account mit Email verbunden.", severity: Severity.success});
         this.rootStore.authStore.setUser(user);
       })
-      .catch((error) => {
+      .catch(() => {
         this.rootStore.uiStore.setMessage({ text: "Account verbindung fehlgeschlagen", severity: Severity.error});
       });
   }
@@ -38,7 +38,7 @@ export class AuthService {
           this.rootStore.uiStore.setMessage({text: "Angemeldet", severity: Severity.success});
           this.rootStore.authStore.setUser(user);
         })
-        .catch((error) => {
+        .catch(() => {
           this.rootStore.uiStore.setMessage({text: "Anmeldung fehlgeschlagen", severity: Severity.error});
         });
   }
@@ -49,8 +49,8 @@ export class AuthService {
 
   changeUser(data: Partial<AuthUserSettingsChange>) {
     return async () => {
-      const currentUser = await this.auth.currentUser!;
-      const actions = [] as Array<Promise<any>>;
+      const currentUser = this.auth.currentUser!;
+      const actions = [] as Array<Promise<unknown>>;
 
       if (data.displayName && data.displayName !== currentUser.displayName) {
         actions.push(

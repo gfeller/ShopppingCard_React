@@ -5,7 +5,7 @@ import {BaseService} from "./base.service";
 import {DocumentChange, Firestore, onSnapshot, Timestamp, where,} from "firebase/firestore";
 import {RootStore} from "../state/root-store";
 import moment from "moment";
-import {Auth} from "@firebase/auth";
+import {Auth} from "firebase/auth";
 
 export class ItemService extends BaseService<IItem> {
   constructor(
@@ -20,7 +20,10 @@ export class ItemService extends BaseService<IItem> {
     this.clearSubscription();
 
     if (!id) {
-      this.rootStore.itemStore && this.rootStore.itemStore.clear();
+      if(this.rootStore.itemStore)
+      {
+      this.rootStore.itemStore.clear();
+      }
       return;
     }
     const query = this.collectionQuery(
@@ -30,7 +33,7 @@ export class ItemService extends BaseService<IItem> {
 
     this.addSubscription(
       onSnapshot(query, (items) => {
-        this.listChanged(id, items.docChanges()); // TODO
+        this.listChanged(items.docChanges()); // TODO
       })
     );
 
@@ -40,7 +43,7 @@ export class ItemService extends BaseService<IItem> {
     );
 
     this.addSubscription(onSnapshot(query2, (items) => {
-      this.listChanged(id, items.docChanges());
+      this.listChanged(items.docChanges());
     })
     );
   }
@@ -54,7 +57,7 @@ export class ItemService extends BaseService<IItem> {
     return super.add(item);
   }
 
-  listChanged(id: string, items: DocumentChange<IItem>[]) {
+  listChanged(items: DocumentChange<IItem>[]) {
     let type = "";
     let counter = -1;
     const toSend: DocumentChange<IItem>[][] = [];

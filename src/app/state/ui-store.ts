@@ -1,6 +1,5 @@
 import {Message, Severity} from "../model/message";
-import {makeAutoObservable} from "mobx";
-import {RootStore} from "./root-store";
+import {makeAutoObservable} from "mobx"; 
 
 export class UiStore {
     private _online: boolean = true;
@@ -18,7 +17,7 @@ export class UiStore {
 
     public readonly message: Message = {show: false, text: "", severity: Severity.info};
 
-    constructor(private rootStore: RootStore) {
+    constructor() {
         makeAutoObservable(this);
     }
 

@@ -1,26 +1,26 @@
-import {observer} from "mobx-react-lite";
-import {useRootStore} from "../state/root-store";
-import React, {FormEvent, useEffect} from "react";
-import {BottomNavigation, BottomNavigationAction, Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, List, ListItem, ListItemButton, ListItemText, Paper, TextField, Typography,} from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import DeleteIcon from "@mui/icons-material/Delete";
-import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import CheckIcon from "@mui/icons-material/Check";
-import {Item} from "../model/item";
-import {Timestamp} from "firebase/firestore";
-import {useNavigate, useParams} from "react-router-dom";
+import DeleteIcon from "@mui/icons-material/Delete";
+import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
+import { BottomNavigation, BottomNavigationAction, Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, List, ListItem, ListItemButton, ListItemText, Paper, TextField, Typography, } from "@mui/material";
+import { Timestamp } from "firebase/firestore";
+import { observer } from "mobx-react-lite";
+import { FormEvent, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { Item } from "../model/item";
+import { useRootStore } from "../state/root-store";
 
-import "./shopping-list.css";
 import moment from "moment";
-import {ConfirmButton} from "../components/confirm-button";
+import { ConfirmButton } from "../components/confirm-button";
+import "./shopping-list.css";
 
 export const ShoppingList = observer(() => {
   const store = useRootStore();
 
-  const [open, setOpen] = React.useState(false);
-  const [text, setText] = React.useState<string>("");
-  const [newItem, setNewItem] = React.useState("");
+  const [open, setOpen] = useState(false);
+  const [text, setText] = useState<string>("");
+  const [newItem, setNewItem] = useState("");
   const navigate = useNavigate();
   const urlParams = useParams();
 
@@ -59,8 +59,7 @@ export const ShoppingList = observer(() => {
     setNewItem("");
   };
 
-  const handleBottomNavigation = (
-    event: React.SyntheticEvent<Element, Event>,
+  const handleBottomNavigation = ( 
     newValue: string
   ) => {
     navigate(`./${newValue}`);
@@ -187,10 +186,10 @@ export const ShoppingList = observer(() => {
           sx={{ overflowX: "auto", marginRight: 0 }}
           showLabels
           value={store.listStore.currentListId}
-          onChange={(event, newValue) => {
+          onChange={(_, newValue) => {
             if (newValue) {
               store.listStore.setCurrentList(newValue);
-              handleBottomNavigation(event, newValue);
+              handleBottomNavigation(newValue);
             }
           }}
         >

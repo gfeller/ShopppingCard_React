@@ -5,12 +5,14 @@ import {RootStore} from "./root-store";
 export class ItemStore {
     public items: { [key: string]: Item } = observable({});
 
-    constructor(private rootStore: RootStore) {
+    constructor(rootStore: RootStore) {
         makeAutoObservable(this);
 
         autorun(() => {
-            rootStore.listStore.currentListId &&
-            rootStore.itemService.getFromList(rootStore.listStore.currentListId);
+            if( rootStore.listStore.currentListId)
+            {
+                rootStore.itemService.getFromList(rootStore.listStore.currentListId)
+            }
         });
     }
 

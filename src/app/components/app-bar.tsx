@@ -34,7 +34,7 @@ export const Appbar = observer(() => {
   const shareList = async () => {
     try {
       await navigator.share(shareData);
-    } catch (err) {
+    } catch  {
       store.uiStore.setMessage({
         text: "Der Browser unterstützt die Funktion nicht.",
         severity: Severity.error,

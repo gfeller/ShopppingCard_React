@@ -12,7 +12,7 @@ export class MessageService {
   ) {
     this.receiveMessage();
 
-    observe(this.rootStore.authStore, change => {
+    observe(this.rootStore.authStore, () => {
       if (this.rootStore.authStore.currentUser!.uid) {
         this.checkToken();
       }
@@ -76,7 +76,7 @@ export class MessageService {
           });
           this.updateToken(token);
         })
-        .catch(x => undefined)
+        .catch(() => undefined)
         .finally(() => {
           if (
               Notification.permission === "default" ||
