@@ -1,18 +1,16 @@
 import { Button, TextField } from '@mui/material';
 import { FormEvent, useEffect, useState } from 'react';
-import { Severity } from '../model/message';
 import { useAuthStore, displayName } from '../state/auth-store';
-import { useUiStore } from '../state/ui-store';
+import { useWithMessage } from '../hooks/use-with-message';
 import { OnlyAnonymous, OnlyUser } from '../components/only-user';
 
 export const User = () => {
   const currentUser = useAuthStore((s) => s.currentUser);
   const name = useAuthStore(displayName);
-  const connectUser = useAuthStore((s) => s.connectUser);
-  const login = useAuthStore((s) => s.login);
-  const resetPwdMail = useAuthStore((s) => s.resetPwdMail);
-  const changeUser = useAuthStore((s) => s.changeUser);
-  const setMessage = useUiStore((s) => s.setMessage);
+  const connectUser = useWithMessage(useAuthStore((s) => s.connectUser), 'Angemeldet', 'Anmeldung fehlgeschlagen');
+  const login = useWithMessage(useAuthStore((s) => s.login), 'Angemeldet', 'Anmeldung fehlgeschlagen');
+  const resetPwdMail = useWithMessage(useAuthStore((s) => s.resetPwdMail), 'Email wurde verschickt', 'Email konnte nicht verschickt werden');
+  const changeUser = useWithMessage(useAuthStore((s) => s.changeUser), 'Änderung gespeichert', (e) => e.message);
 
   const [email, setEmail] = useState('');
   const [pwd, setPassword] = useState('');
@@ -27,37 +25,27 @@ export const User = () => {
   const handleConnectUser = (event: FormEvent) => {
     event.preventDefault();
     const submitter = (event.nativeEvent as SubmitEvent)?.submitter as HTMLButtonElement;
-    const promise = submitter?.value === 'create'
-      ? connectUser({ email, pwd })
-      : login({ email, pwd });
-
-    promise
-      .then(() => setMessage({ text: 'Angemeldet', severity: Severity.success }))
-      .catch(() => setMessage({ text: 'Anmeldung fehlgeschlagen', severity: Severity.error }));
+    if (submitter?.value === 'create') {
+      connectUser({ email, pwd });
+    } else {
+      login({ email, pwd });
+    }
   };
 
   const handleResetPwd = (event: FormEvent) => {
     event.preventDefault();
     const userEmail = currentUser?.email;
-    if (userEmail) {
-      resetPwdMail(userEmail)
-        .then(() => setMessage({ text: 'Email wurde verschickt', severity: Severity.success }))
-        .catch(() => setMessage({ text: 'Email konnte nicht verschickt werden', severity: Severity.error }));
-    }
+    if (userEmail) resetPwdMail(userEmail);
   };
 
   const handleChangeDisplayname = (event: FormEvent) => {
     event.preventDefault();
-    changeUser({ displayName: userDisplayName })
-      .then(() => setMessage({ text: 'Anzeigename wurde geändert', severity: Severity.success }))
-      .catch((error: Error) => setMessage({ text: error.message, severity: Severity.error }));
+    changeUser({ displayName: userDisplayName });
   };
 
   const handleChangePwd = (event: FormEvent) => {
     event.preventDefault();
-    changeUser({ pwd: newPwd, pwdOld: oldPwd, email: currentUser!.email! })
-      .then(() => setMessage({ text: 'Password wurde geändert', severity: Severity.success }))
-      .catch((error: Error) => setMessage({ text: error.message, severity: Severity.error }));
+    changeUser({ pwd: newPwd, pwdOld: oldPwd, email: currentUser!.email! });
   };
 
   return (

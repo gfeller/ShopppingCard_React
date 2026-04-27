@@ -8,7 +8,7 @@ interface ItemState {
   add: (items: IItem[]) => void;
   remove: (items: IItem[]) => void;
   clear: () => void;
-  addItem: (item: Omit<IItem, 'id' | 'createdAt' | 'createdBy' | 'boughtAt'>) => Promise<void>;
+  addItem: (item: IItem) => Promise<void>;
   updateItem: (item: IItem) => Promise<void>;
   removeItem: (id: string) => Promise<void>;
   toggleBought: (item: IItem) => Promise<void>;
@@ -29,14 +29,20 @@ export const useItemStore = create<ItemState>()((set) => ({
       return { items: next };
     }),
   clear: () => set({ items: {} }),
-  addItem: (item) => itemService.add(item as IItem),
-  updateItem: (item) => itemService.update(item),
-  removeItem: (id) => itemService.remove(id),
-  toggleBought: (item) => {
+  addItem: async (item) => {
+    await itemService.add(item as IItem);
+  },
+  updateItem: async (item) => {
+    await itemService.update(item);
+  },
+  removeItem: async (id) => {
+    await itemService.remove(id);
+  },
+  toggleBought: async (item: IItem) => {
     if (item.boughtAt) {
-      return itemService.add({ description: item.description, listId: item.listId });
+      await itemService.add({ description: item.description, listId: item.listId });
     } else {
-      return itemService.update({ ...item, boughtAt: Timestamp.now() });
+      await itemService.update({ ...item, boughtAt: Timestamp.now() });
     }
   },
 }));

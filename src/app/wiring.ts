@@ -6,6 +6,7 @@ import { useUiStore } from './state/ui-store';
 
 // Auth: bridge Firebase auth state into the store
 authService.onAuthChange((user) => {
+  debugger;
   if (user === null) {
     authService.signInAnonymously();
   } else {

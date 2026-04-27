@@ -35,6 +35,7 @@ export const ShoppingList = () => {
   const addList = useListStore((s) => s.addList);
   const updateList = useListStore((s) => s.updateList);
   const removeList = useListStore((s) => s.removeList);
+  
   const items = useItemStore((s) => s.items);
   const addItem = useItemStore((s) => s.addItem);
   const removeItem = useItemStore((s) => s.removeItem);

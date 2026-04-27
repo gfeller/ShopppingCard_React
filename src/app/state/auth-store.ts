@@ -4,7 +4,7 @@ import { AuthConnect, AuthUserSettingsChange, IAuthUser } from '../model/auth';
 import { authService } from '../services';
 
 interface AuthState {
-  currentUser: IAuthUser | undefined;
+  currentUser: IAuthUser | undefined | null;
   setUser: (user: IAuthUser) => void;
   connectUser: (data: AuthConnect) => Promise<void>;
   login: (data: AuthConnect) => Promise<void>;
@@ -19,7 +19,10 @@ export const useAuthStore = create<AuthState>()(
     connectUser: (data) => authService.connectUser(data),
     login: (data) => authService.login(data),
     resetPwdMail: (email) => authService.resetPwdMail(email),
-    changeUser: (data) => authService.changeUser(data),
+    changeUser: async (data) => {
+      await authService.changeUser(data);
+      set({ currentUser: authService.auth.currentUser })
+    },
   }))
 );
 

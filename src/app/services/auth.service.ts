@@ -22,7 +22,7 @@ function toIAuthUser(user: User): IAuthUser {
 }
 
 export class AuthService {
-  constructor(public auth: Auth) {}
+  constructor(public auth: Auth) { }
 
   onAuthChange(cb: (user: IAuthUser | null) => void): () => void {
     return this.auth.onAuthStateChanged((user: User | null) => {
