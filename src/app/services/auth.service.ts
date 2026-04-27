@@ -10,7 +10,7 @@ import {
   updatePassword,
   updateProfile,
 } from 'firebase/auth';
-import { AuthConnect, AuthUserSettingsChange, IAuthUser } from '../model/auth';
+import { AuthConnect, IAuthUser, ProfileChange } from '../model/auth';
 
 function toIAuthUser(user: User): IAuthUser {
   return {
@@ -55,23 +55,17 @@ export class AuthService {
     return sendPasswordResetEmail(this.auth, email);
   }
 
-  async changeUser(data: Partial<AuthUserSettingsChange>): Promise<void> {
+  async updateProfile(data: ProfileChange): Promise<void> {
     const currentUser = this.auth.currentUser!;
-    const actions: Promise<unknown>[] = [];
+    if (data.displayName !== currentUser.displayName) {
+      await updateProfile(currentUser, { displayName: data.displayName, photoURL: '' });
+    }
+  }
 
-    if (data.displayName && data.displayName !== currentUser.displayName) {
-      actions.push(
-        updateProfile(currentUser, { displayName: data.displayName, photoURL: '' })
-      );
-    }
-    if (data.email && data.pwd && data.pwdOld) {
-      const cred = EmailAuthProvider.credential(data.email, data.pwdOld);
-      actions.push(
-        reauthenticateWithCredential(currentUser, cred).then(() =>
-          updatePassword(currentUser, data.pwd!)
-        )
-      );
-    }
-    await Promise.all(actions);
+  async updatePassword(email: string, pwdOld: string, pwd: string): Promise<void> {
+    const currentUser = this.auth.currentUser!;
+    const cred = EmailAuthProvider.credential(email, pwdOld);
+    await reauthenticateWithCredential(currentUser, cred);
+    await updatePassword(currentUser, pwd);
   }
 }

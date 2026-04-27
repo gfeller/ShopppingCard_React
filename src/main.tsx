@@ -2,7 +2,8 @@ import { StrictMode } from 'react';
 import * as ReactDOM from 'react-dom/client';
 import App from './app/app';
 import './app/services';
-import './app/wiring';
+import { initWiring } from './app/wiring';
+initWiring();
 import './styles.scss';
 
 const root = ReactDOM.createRoot(

@@ -10,7 +10,6 @@ export interface AuthConnect {
   pwd: string;
 }
 
-export interface AuthUserSettingsChange extends AuthConnect {
-  pwdOld: string;
+export interface ProfileChange {
   displayName: string;
 }

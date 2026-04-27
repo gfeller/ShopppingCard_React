@@ -10,7 +10,8 @@ export const User = () => {
   const connectUser = useWithMessage(useAuthStore((s) => s.connectUser), 'Angemeldet', 'Anmeldung fehlgeschlagen');
   const login = useWithMessage(useAuthStore((s) => s.login), 'Angemeldet', 'Anmeldung fehlgeschlagen');
   const resetPwdMail = useWithMessage(useAuthStore((s) => s.resetPwdMail), 'Email wurde verschickt', 'Email konnte nicht verschickt werden');
-  const changeUser = useWithMessage(useAuthStore((s) => s.changeUser), 'Änderung gespeichert', (e) => e.message);
+  const updateProfile = useWithMessage(useAuthStore((s) => s.updateProfile), 'Anzeigename gespeichert', (e) => e.message);
+  const updatePassword = useWithMessage(useAuthStore((s) => s.updatePassword), 'Passwort geändert', (e) => e.message);
 
   const [email, setEmail] = useState('');
   const [pwd, setPassword] = useState('');
@@ -40,12 +41,12 @@ export const User = () => {
 
   const handleChangeDisplayname = (event: FormEvent) => {
     event.preventDefault();
-    changeUser({ displayName: userDisplayName });
+    updateProfile({ displayName: userDisplayName });
   };
 
   const handleChangePwd = (event: FormEvent) => {
     event.preventDefault();
-    changeUser({ pwd: newPwd, pwdOld: oldPwd, email: currentUser!.email! });
+    updatePassword(currentUser!.email!, oldPwd, newPwd);
   };
 
   return (

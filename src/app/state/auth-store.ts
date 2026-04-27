@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
-import { AuthConnect, AuthUserSettingsChange, IAuthUser } from '../model/auth';
+import { AuthConnect, IAuthUser, ProfileChange } from '../model/auth';
 import { authService } from '../services';
 
 interface AuthState {
@@ -9,7 +9,8 @@ interface AuthState {
   connectUser: (data: AuthConnect) => Promise<void>;
   login: (data: AuthConnect) => Promise<void>;
   resetPwdMail: (email: string) => Promise<void>;
-  changeUser: (data: Partial<AuthUserSettingsChange>) => Promise<void>;
+  updateProfile: (data: ProfileChange) => Promise<void>;
+  updatePassword: (email: string, pwdOld: string, pwd: string) => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -19,10 +20,11 @@ export const useAuthStore = create<AuthState>()(
     connectUser: (data) => authService.connectUser(data),
     login: (data) => authService.login(data),
     resetPwdMail: (email) => authService.resetPwdMail(email),
-    changeUser: async (data) => {
-      await authService.changeUser(data);
-      set({ currentUser: authService.auth.currentUser })
+    updateProfile: async (data) => {
+      await authService.updateProfile(data);
+      set({ currentUser: authService.auth.currentUser });
     },
+    updatePassword: (email, pwdOld, pwd) => authService.updatePassword(email, pwdOld, pwd),
   }))
 );
 
