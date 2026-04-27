@@ -1,19 +1,12 @@
-import {addDoc, collection, CollectionReference, deleteDoc, doc, DocumentData, Firestore, query, QueryConstraint, Unsubscribe, updateDoc,} from "firebase/firestore";
-import {DTO} from "../model/dto";
+import { addDoc, collection, CollectionReference, deleteDoc, doc, DocumentData, Firestore, query, QueryCompositeFilterConstraint, QueryConstraint, Unsubscribe, updateDoc, } from "firebase/firestore";
+import { DTO } from "../model/dto";
 
 export abstract class BaseService<T extends DTO> {
-  private subscription: Unsubscribe[] = [];
 
-  protected constructor(protected collectionName: string, protected db: Firestore) {}
 
-  clearSubscription() {
-    this.subscription.forEach((x) => x());
-    this.subscription = [];
-  }
+  protected constructor(protected collectionName: string, protected db: Firestore) { }
 
-  addSubscription(subscription: Unsubscribe) {
-    this.subscription.push(subscription);
-  }
+
 
   get collection() {
     return collection(this.db, this.collectionName) as CollectionReference<T, T>; // HACK because no collection<T, T>
@@ -22,8 +15,16 @@ export abstract class BaseService<T extends DTO> {
   collectionQuery(...queryConstraints: QueryConstraint[]) {
     const baseCollection = this.collection;
     return query<T, T>(
-        baseCollection,
-        ...queryConstraints
+      baseCollection,
+      ...queryConstraints
+    );
+  }
+
+  collectionQueryComposite(filter: QueryCompositeFilterConstraint) {
+    const baseCollection = this.collection;
+    return query<T, T>(
+      baseCollection,
+      filter
     );
   }
 

@@ -1,34 +1,42 @@
-import {Item} from "../model/item";
-import {autorun, makeAutoObservable, observable} from "mobx";
-import {RootStore} from "./root-store";
+import { create } from 'zustand';
+import { Timestamp } from 'firebase/firestore';
+import { IItem } from '../model/item';
+import { itemService } from '../services';
 
-export class ItemStore {
-    public items: { [key: string]: Item } = observable({});
-
-    constructor(rootStore: RootStore) {
-        makeAutoObservable(this);
-
-        autorun(() => {
-            if( rootStore.listStore.currentListId)
-            {
-                rootStore.itemService.getFromList(rootStore.listStore.currentListId)
-            }
-        });
-    }
-
-    add(items: Item[]) {
-        items.forEach((x) => {
-            this.items[x.id!] = x;
-        });
-    }
-
-    remove(items: Item[]) {
-        items.forEach((x) => {
-            delete this.items[x.id!];
-        });
-    }
-
-    clear() {
-        this.items = {};
-    }
+interface ItemState {
+  items: Record<string, IItem>;
+  add: (items: IItem[]) => void;
+  remove: (items: IItem[]) => void;
+  clear: () => void;
+  addItem: (item: Omit<IItem, 'id' | 'createdAt' | 'createdBy' | 'boughtAt'>) => Promise<void>;
+  updateItem: (item: IItem) => Promise<void>;
+  removeItem: (id: string) => Promise<void>;
+  toggleBought: (item: IItem) => Promise<void>;
 }
+
+export const useItemStore = create<ItemState>()((set) => ({
+  items: {},
+  add: (incoming) =>
+    set((state) => {
+      const next = { ...state.items };
+      incoming.forEach((x) => { next[x.id!] = x; });
+      return { items: next };
+    }),
+  remove: (incoming) =>
+    set((state) => {
+      const next = { ...state.items };
+      incoming.forEach((x) => { delete next[x.id!]; });
+      return { items: next };
+    }),
+  clear: () => set({ items: {} }),
+  addItem: (item) => itemService.add(item as IItem),
+  updateItem: (item) => itemService.update(item),
+  removeItem: (id) => itemService.remove(id),
+  toggleBought: (item) => {
+    if (item.boughtAt) {
+      return itemService.add({ description: item.description, listId: item.listId });
+    } else {
+      return itemService.update({ ...item, boughtAt: Timestamp.now() });
+    }
+  },
+}));

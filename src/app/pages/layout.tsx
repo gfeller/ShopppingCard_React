@@ -1,44 +1,42 @@
-import {Alert, Snackbar} from "@mui/material";
-import {observer} from "mobx-react-lite";
-import {Outlet} from "react-router-dom";
-import {Appbar} from "../components/app-bar";
-import {useRootStore} from "../state/root-store";
+import { Alert, Snackbar } from "@mui/material";
+import { Outlet } from "react-router-dom";
+import { Appbar } from "../components/app-bar";
+import { useUiStore } from "../state/ui-store";
 
-export const Layout = observer(() => {
-  const store = useRootStore();
+export const Layout = () => {
+  const message = useUiStore((s) => s.message);
+  const resetMessage = useUiStore((s) => s.resetMessage);
 
   return (
     <div className="grid h-dvh max-h-dvh" style={{
-        gridTemplateAreas: '"toolbar" "content"',
-        gridTemplateRows: "auto 1fr"
+      gridTemplateAreas: '"toolbar" "content"',
+      gridTemplateRows: "auto 1fr"
     }}>
       <Snackbar
-        anchorOrigin={{horizontal: "right", vertical: "top"}}
-        open={store.uiStore.message.show}
+        anchorOrigin={{ horizontal: "right", vertical: "top" }}
+        open={message.show}
         autoHideDuration={6000}
-        onClose={store.uiStore.resetMessage}
+        onClose={resetMessage}
       >
         <Alert
-          onClose={store.uiStore.resetMessage}
-          severity={store.uiStore.message.severity}
+          onClose={resetMessage}
+          severity={message.severity}
           sx={{ width: "100%" }}
         >
-          {store.uiStore.message.text}
+          {message.text}
         </Alert>
       </Snackbar>
       <Appbar />
-      <div
-        style={{
-          position: "relative",
-          display: "flex",
-          flexDirection: "column",
-          maxHeight: "100%",
-          height: "100%",
-          overflow: "auto",
-        }}
-      >
+      <div style={{
+        position: "relative",
+        display: "flex",
+        flexDirection: "column",
+        maxHeight: "100%",
+        height: "100%",
+        overflow: "auto",
+      }}>
         <Outlet />
       </div>
     </div>
   );
-});
+};

@@ -1,20 +1,16 @@
-import {RootStore} from "../state/root-store";
-
 export class OnlineService {
+  subscribe(cb: (online: boolean) => void): () => void {
+    cb(navigator.onLine);
 
-    constructor(private rootStore: RootStore) {
+    const onOnline = () => cb(true);
+    const onOffline = () => cb(false);
 
+    window.addEventListener('online', onOnline);
+    window.addEventListener('offline', onOffline);
 
-    }
-
-    init(){
-        this.rootStore.uiStore.online = navigator.onLine;
-
-        window.addEventListener('offline', () => {
-            this.rootStore.uiStore.online =  false;
-        });
-        window.addEventListener('online', () => {
-            this.rootStore.uiStore.online  = true;
-        });
-    }
+    return () => {
+      window.removeEventListener('online', onOnline);
+      window.removeEventListener('offline', onOffline);
+    };
+  }
 }

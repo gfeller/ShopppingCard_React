@@ -1,48 +1,31 @@
-import {makeAutoObservable} from "mobx";
+import { create } from 'zustand';
+import { subscribeWithSelector } from 'zustand/middleware';
+import { AuthConnect, AuthUserSettingsChange, IAuthUser } from '../model/auth';
+import { authService } from '../services';
 
-export interface IAuthUser{
-    uid: string;
-    isAnonymous: boolean;
-    email: string | null;
-    displayName: string| null;
+interface AuthState {
+  currentUser: IAuthUser | undefined;
+  setUser: (user: IAuthUser) => void;
+  connectUser: (data: AuthConnect) => Promise<void>;
+  login: (data: AuthConnect) => Promise<void>;
+  resetPwdMail: (email: string) => Promise<void>;
+  changeUser: (data: Partial<AuthUserSettingsChange>) => Promise<void>;
 }
 
-export class AuthUser implements IAuthUser{
-    public uid: string;
-    public isAnonymous: boolean;
-    public email: string | null;
-    public displayName: string| null;
+export const useAuthStore = create<AuthState>()(
+  subscribeWithSelector((set) => ({
+    currentUser: undefined,
+    setUser: (user) => set({ currentUser: user }),
+    connectUser: (data) => authService.connectUser(data),
+    login: (data) => authService.login(data),
+    resetPwdMail: (email) => authService.resetPwdMail(email),
+    changeUser: (data) => authService.changeUser(data),
+  }))
+);
 
-    constructor({uid, isAnonymous, email, displayName}: { uid: string, isAnonymous: boolean, email: string | null , displayName: string| null }) {
-        this.uid = uid;
-        this.isAnonymous = isAnonymous;
-        this.email = email;
-        this.displayName = displayName;
-
-        makeAutoObservable(this);
-    }
-}
-
-export class AuthStore {
-    public currentUser?: AuthUser;
-
-    constructor() {
-        makeAutoObservable(this);
-    }
-
-    setUser(user: IAuthUser) {
-        this.currentUser = new AuthUser(user);
-    }
-
-    get isConnected() {
-        return !!this.currentUser?.email;
-    }
-
-    get displayName() {
-        return (
-            this.currentUser?.displayName ||
-            this.currentUser?.email ||
-            this.currentUser?.uid.substring(0, 10)
-        );
-    }
-}
+export type { IAuthUser };
+export const isConnected = (state: AuthState) => !!state.currentUser?.email;
+export const displayName = (state: AuthState) =>
+  state.currentUser?.displayName ||
+  state.currentUser?.email ||
+  state.currentUser?.uid.substring(0, 10);

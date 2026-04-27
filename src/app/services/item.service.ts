@@ -1,51 +1,34 @@
-import {IItem, Item} from "../model/item";
+import { IItem } from "../model/item";
 
-import {BaseService} from "./base.service";
+import { BaseService } from "./base.service";
 
-import {DocumentChange, Firestore, onSnapshot, Timestamp, where,} from "firebase/firestore";
-import {RootStore} from "../state/root-store";
+import { and, DocumentChange, Firestore, onSnapshot, or, Timestamp, where, } from "firebase/firestore";
+
 import moment from "moment";
-import {Auth} from "firebase/auth";
+import { Auth } from "firebase/auth";
+
+interface ListSubscription {
+  onAdd: (items: IItem[]) => void;
+  onRemove: (items: IItem[]) => void
+}
 
 export class ItemService extends BaseService<IItem> {
-  constructor(
-    private rootStore: RootStore,
-    db: Firestore,
-    public afAuth: Auth
-  ) {
-    super("item", db);
+  constructor(db: Firestore, public afAuth: Auth) {
+    super('list', db);
   }
 
-  getFromList(id?: string) {
-    this.clearSubscription();
-
-    if (!id) {
-      if(this.rootStore.itemStore)
-      {
-      this.rootStore.itemStore.clear();
-      }
-      return;
-    }
-    const query = this.collectionQuery(
-      where("listId", "==", id),
-      where("boughtAt", "==", null)
+  subscribeToList(id: string | undefined, callbacks: ListSubscription) {
+    const query = this.collectionQueryComposite(
+      and(where("listId", "==", id),
+        or(
+          where("boughtAt", ">", moment().subtract(1, "days").toDate()),
+          where("boughtAt", "==", null)
+        ))
     );
 
-    this.addSubscription(
-      onSnapshot(query, (items) => {
-        this.listChanged(items.docChanges()); // TODO
-      })
-    );
-
-    const query2 = this.collectionQuery(
-      where("listId", "==", id),
-      where("boughtAt", ">", moment().subtract(1, "days").toDate())
-    );
-
-    this.addSubscription(onSnapshot(query2, (items) => {
-      this.listChanged(items.docChanges());
-    })
-    );
+    return onSnapshot(query, (items) => {
+      this.listChanged(items.docChanges(), callbacks);
+    });
   }
 
   async add(item: IItem) {
@@ -57,7 +40,7 @@ export class ItemService extends BaseService<IItem> {
     return super.add(item);
   }
 
-  listChanged(items: DocumentChange<IItem>[]) {
+  listChanged(items: DocumentChange<IItem>[], callbacks: ListSubscription) {
     let type = "";
     let counter = -1;
     const toSend: DocumentChange<IItem>[][] = [];
@@ -72,17 +55,9 @@ export class ItemService extends BaseService<IItem> {
     }
     for (const action of toSend.filter((x) => x.length > 0)) {
       if (action[0].type === "added" || action[0].type === "modified") {
-        this.rootStore.itemStore.add(
-          action.map(
-            (item) => ( new Item({ id: item.doc.id, ...item.doc.data() }))
-          )
-        );
+        callbacks.onAdd(action.map((item) => (({ id: item.doc.id, ...item.doc.data() }))))
       } else if (action[0].type === "removed") {
-        this.rootStore.itemStore.remove(
-          action.map(
-            (item) => (new Item({ id: item.doc.id, ...item.doc.data() }))
-          )
-        );
+        callbacks.onRemove(action.map((item) => (({ id: item.doc.id, ...item.doc.data() }))))
       }
     }
   }

@@ -1,5 +1,4 @@
-import { RootStore, StoreRootProvider, useRootStore } from './state/root-store';
-import { observer } from 'mobx-react-lite';
+import { useAuthStore } from './state/auth-store';
 import { ShoppingList } from './pages/shopping-list';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { Layout } from './pages/layout';
@@ -7,8 +6,10 @@ import { User } from './pages/user';
 import { SharedList } from './pages/share';
 import { LinearProgress } from '@mui/material';
 
-const AppObserver = observer(() => {
-  if (!useRootStore().init) {
+const AppContent = () => {
+  const currentUser = useAuthStore((s) => s.currentUser);
+
+  if (!currentUser) {
     return <LinearProgress />;
   }
 
@@ -30,17 +31,6 @@ const AppObserver = observer(() => {
       </BrowserRouter>
     </div>
   );
-});
+};
 
-function App({ rootStore }: { rootStore: RootStore }) {
-  if (rootStore) {
-    return (
-      <StoreRootProvider value={rootStore}>
-        <AppObserver />
-      </StoreRootProvider>
-    );
-  }
-  return <>MISSING ROOTSTORE</>;
-}
-
-export default App;
+export default AppContent;

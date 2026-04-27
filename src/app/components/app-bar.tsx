@@ -1,27 +1,34 @@
-import {AppBar, Button, IconButton, Toolbar} from "@mui/material";
-import {observer} from "mobx-react-lite";
+import { AppBar, Button, IconButton, Toolbar } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
 import Editicon from "@mui/icons-material/Edit";
 import Shareicon from "@mui/icons-material/Share";
 import CloudOffIcon from "@mui/icons-material/CloudOff";
 import CloudQueueIcon from "@mui/icons-material/CloudQueue";
 import LinkIcon from "@mui/icons-material/Link";
-import {useRootStore} from "../state/root-store";
 import LinkOffIcon from "@mui/icons-material/LinkOff";
-import {useNavigate} from "react-router-dom";
-import {Severity} from "../model/message";
+import { useNavigate } from "react-router-dom";
+import { Severity } from "../model/message";
+import { useListStore } from "../state/list-store";
+import { useAuthStore, isConnected, displayName } from "../state/auth-store";
+import { useUiStore } from "../state/ui-store";
 
-export const Appbar = observer(() => {
-  const store = useRootStore();
+export const Appbar = () => {
   const navigate = useNavigate();
+  const currentListId = useListStore((s) => s.currentListId);
+  const setCurrentList = useListStore((s) => s.setCurrentList);
+  const connected = useAuthStore(isConnected);
+  const name = useAuthStore(displayName);
+  const online = useUiStore((s) => s.online);
+  const toggleListEdit = useUiStore((s) => s.toggleListEdit);
+  const setMessage = useUiStore((s) => s.setMessage);
 
   const navigateHome = () => {
-    store.listStore.setCurrentList("");
+    setCurrentList(undefined);
     navigate("/");
   };
 
   const navigateUser = () => {
-    store.listStore.setCurrentList("");
+    setCurrentList(undefined);
     navigate("/user");
   };
 
@@ -34,11 +41,8 @@ export const Appbar = observer(() => {
   const shareList = async () => {
     try {
       await navigator.share(shareData);
-    } catch  {
-      store.uiStore.setMessage({
-        text: "Der Browser unterstützt die Funktion nicht.",
-        severity: Severity.error,
-      });
+    } catch {
+      setMessage({ text: "Der Browser unterstützt die Funktion nicht.", severity: Severity.error });
     }
   };
 
@@ -50,26 +54,27 @@ export const Appbar = observer(() => {
             <HomeIcon />
           </IconButton>
 
-          {store.listStore.currentListId && (
+          {currentListId && (
             <div>
               <IconButton color="inherit" aria-label="share" onClick={() => shareList()}><Shareicon /></IconButton>
-              <IconButton color="inherit" aria-label="edit" onClick={() => store.uiStore.toggleListEdit()} ><Editicon /></IconButton>
+              <IconButton color="inherit" aria-label="edit" onClick={() => toggleListEdit()}><Editicon /></IconButton>
             </div>
           )}
 
           <div style={{ display: "flex", alignItems: "center" }}>
-            <Button data-testid="login-name" sx={{ textTransform: "none" }} color="inherit"
-                    startIcon={ store.authStore.isConnected ? <LinkIcon /> : <LinkOffIcon /> }
-                    onClick={navigateUser}>
-              {store.authStore.displayName}
+            <Button
+              data-testid="login-name"
+              sx={{ textTransform: "none" }}
+              color="inherit"
+              startIcon={connected ? <LinkIcon /> : <LinkOffIcon />}
+              onClick={navigateUser}
+            >
+              {name}
             </Button>
-            {store.uiStore.online ? <CloudQueueIcon /> : <CloudOffIcon />}
+            {online ? <CloudQueueIcon /> : <CloudOffIcon />}
           </div>
         </Toolbar>
       </AppBar>
     </>
   );
-});
-
-
-
+};

@@ -1,36 +1,23 @@
-import {Message, Severity} from "../model/message";
-import {makeAutoObservable} from "mobx"; 
+import { create } from 'zustand';
+import { Message, Severity } from '../model/message';
 
-export class UiStore {
-    private _online: boolean = true;
-
-    get online(): boolean {
-        return this._online;
-    }
-
-    set online(value: boolean) {
-        this._online = value;
-    }
-
-    public showListEdit: boolean = false;
-
-    public readonly message: Message = {show: false, text: "", severity: Severity.info};
-
-    constructor() {
-        makeAutoObservable(this);
-    }
-
-    toggleListEdit() {
-        this.showListEdit = !this.showListEdit;
-    }
-
-    setMessage(message: Omit<Message, "show">) {
-        this.message.show = true;
-        this.message.severity = message.severity;
-        this.message.text = message.text;
-    }
-
-    resetMessage = () => {
-        this.message.show = false;
-    };
+interface UiState {
+  online: boolean;
+  showListEdit: boolean;
+  message: Message;
+  setOnline: (online: boolean) => void;
+  toggleListEdit: () => void;
+  setMessage: (message: Omit<Message, 'show'>) => void;
+  resetMessage: () => void;
 }
+
+export const useUiStore = create<UiState>()((set) => ({
+  online: true,
+  showListEdit: false,
+  message: { show: false, text: '', severity: Severity.info },
+  setOnline: (online) => set({ online }),
+  toggleListEdit: () => set((state) => ({ showListEdit: !state.showListEdit })),
+  setMessage: (message) => set({ message: { show: true, ...message } }),
+  resetMessage: () =>
+    set((state) => ({ message: { ...state.message, show: false } })),
+}));

@@ -1,18 +1,17 @@
-import {observer} from "mobx-react-lite";
-import {useNavigate, useParams} from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import CheckIcon from "@mui/icons-material/Check";
 import ClearIcon from "@mui/icons-material/Clear";
-import {Button, Card, CardActions, CardContent, Typography,} from "@mui/material";
-import {useRootStore} from "../state/root-store";
+import { Button, Card, CardActions, CardContent, Typography } from "@mui/material";
+import { useListStore } from "../state/list-store";
 
-export const SharedList = observer(() => {
+export const SharedList = () => {
   const params = useParams();
-  const store = useRootStore();
   const navigate = useNavigate();
+  const addShareList = useListStore((s) => s.addShareList);
 
   const addSharedList = (add: boolean) => {
     if (params.id && add) {
-      store.listService.addShareList(params.id).then(() => {
+      addShareList(params.id).then(() => {
         navigate(`/list/${params.id}`);
       });
     } else {
@@ -52,4 +51,4 @@ export const SharedList = observer(() => {
       </Card>
     </div>
   );
-});
+};

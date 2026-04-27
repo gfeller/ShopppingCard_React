@@ -1,47 +1,55 @@
-import {IList, List} from '../model/list';
-import {BaseService} from './base.service';
-
-import {addDoc, doc, Firestore, onSnapshot, setDoc, where} from 'firebase/firestore';
-
-
-import {RootStore} from "../state/root-store";
-import {Auth} from "firebase/auth";
-
+import { IList } from '../model/list';
+import { BaseService } from './base.service';
+import { Auth } from 'firebase/auth';
+import {
+  Firestore,
+  Unsubscribe,
+  addDoc,
+  doc,
+  onSnapshot,
+  setDoc,
+  where,
+} from 'firebase/firestore';
 
 export class ListService extends BaseService<IList> {
-
-
-  constructor(rootStore: RootStore, db: Firestore, public afAuth: Auth) {
+  constructor(db: Firestore, public afAuth: Auth) {
     super('list', db);
+  }
 
-    afAuth.onAuthStateChanged((user) => {
-      if (user !== null) {
-        this.clearSubscription();
-        const query = this.collectionQuery(where(`owner.${user.uid}`, '==', true));
-        this.addSubscription(onSnapshot(query, {includeMetadataChanges: true}, (lists) => {
-          const results = lists.docs.map(change => (new List({
-            ...change.data(),
-            id: change.id,
-          })));
-          rootStore.listStore.setList(results);
-        }));
-      }
+  subscribeToLists(uid: string, onChange: (lists: IList[]) => void): Unsubscribe {
+    const query = this.collectionQuery(where(`owner.${uid}`, '==', true));
+    return onSnapshot(query, { includeMetadataChanges: true }, (snapshot) => {
+      const lists = snapshot.docs.map((change) => ({
+        ...change.data(),
+        id: change.id,
+      }));
+      onChange(lists);
     });
   }
 
-  async addList(description: string) {
-    const currentUser = await this.afAuth.currentUser;
-    return addDoc(this.collection, {description, owner: {[currentUser!.uid]: true}});
+  async addList(description: string): Promise<void> {
+    const currentUser = this.afAuth.currentUser!;
+    await addDoc(this.collection, {
+      description,
+      owner: { [currentUser.uid]: true },
+    });
   }
 
-
-  async addShareList(listId: string) {
-    const currentUser = await this.afAuth.currentUser;
-    return setDoc(doc(this.db, `list/${listId}`), {owner: {[currentUser!.uid]: true}}, {merge: true});
+  async addShareList(listId: string): Promise<void> {
+    const currentUser = this.afAuth.currentUser!;
+    await setDoc(
+      doc(this.db, `list/${listId}`),
+      { owner: { [currentUser.uid]: true } },
+      { merge: true }
+    );
   }
 
-  async removeShareList(listId: string) {
-    const currentUser = await this.afAuth.currentUser;
-    return setDoc(doc(this.db, `list/${listId}`), {owner: {[currentUser!.uid]: false}}, {merge: true});
+  async removeShareList(listId: string): Promise<void> {
+    const currentUser = this.afAuth.currentUser!;
+    await setDoc(
+      doc(this.db, `list/${listId}`),
+      { owner: { [currentUser.uid]: false } },
+      { merge: true }
+    );
   }
 }
