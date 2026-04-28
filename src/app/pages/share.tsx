@@ -2,12 +2,12 @@ import { useNavigate, useParams } from "react-router-dom";
 import CheckIcon from "@mui/icons-material/Check";
 import ClearIcon from "@mui/icons-material/Clear";
 import { Button, Card, CardActions, CardContent, Typography } from "@mui/material";
-import { useListStore } from "../state/list-store";
+import { useListActions } from "../state/list-store";
 
 export const SharedList = () => {
   const params = useParams();
   const navigate = useNavigate();
-  const addShareList = useListStore((s) => s.addShareList);
+  const { addShareList } = useListActions();
 
   const addSharedList = (add: boolean) => {
     if (params.id && add) {

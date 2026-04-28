@@ -1,11 +1,11 @@
 import { Alert, Snackbar } from "@mui/material";
 import { Outlet } from "react-router-dom";
 import { Appbar } from "../components/app-bar";
-import { useUiStore } from "../state/ui-store";
+import { useUiStore, useUiActions } from "../state/ui-store";
 
 export const Layout = () => {
   const message = useUiStore((s) => s.message);
-  const resetMessage = useUiStore((s) => s.resetMessage);
+  const { resetMessage } = useUiActions();
 
   return (
     <div className="grid h-dvh max-h-dvh" style={{

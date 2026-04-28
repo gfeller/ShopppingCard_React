@@ -1,12 +1,12 @@
 import { Severity } from '../model/message';
-import { useUiStore } from '../state/ui-store';
+import { useUiActions } from '../state/ui-store';
 
 export const useWithMessage = <T extends unknown[], R = void>(
   action: (...args: T) => Promise<R>,
   successText: string | ((result: R) => string) | null,
   errorText: string | ((error: Error) => string)
 ) => {
-  const setMessage = useUiStore((s) => s.setMessage);
+  const { setMessage } = useUiActions();
 
   return (...args: T) =>
     action(...args)

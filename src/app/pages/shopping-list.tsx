@@ -24,24 +24,19 @@ import { FormEvent, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import moment from "moment";
 import { ConfirmButton } from "../components/confirm-button";
-import { useListStore } from "../state/list-store";
-import { useItemStore } from "../state/item-store";
-import { useUiStore } from "../state/ui-store";
+import { useListStore, useListActions } from "../state/list-store";
+import { useItemStore, useItemActions } from "../state/item-store";
+import { useUiStore, useUiActions } from "../state/ui-store";
 
 export const ShoppingList = () => {
   const lists = useListStore((s) => s.items);
   const currentListId = useListStore((s) => s.currentListId);
-  const setCurrentList = useListStore((s) => s.setCurrentList);
-  const addList = useListStore((s) => s.addList);
-  const updateList = useListStore((s) => s.updateList);
-  const removeList = useListStore((s) => s.removeList);
-  
+  const { setCurrentList, addList, updateList, removeList } = useListActions();
+
   const items = useItemStore((s) => s.items);
-  const addItem = useItemStore((s) => s.addItem);
-  const removeItem = useItemStore((s) => s.removeItem);
-  const toggleBought = useItemStore((s) => s.toggleBought);
+  const { addItem, removeItem, toggleBought } = useItemActions();
   const showListEdit = useUiStore((s) => s.showListEdit);
-  const toggleListEdit = useUiStore((s) => s.toggleListEdit);
+  const { toggleListEdit } = useUiActions();
 
   const [open, setOpen] = useState(false);
   const [text, setText] = useState<string>("");

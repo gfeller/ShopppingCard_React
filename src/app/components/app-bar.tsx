@@ -7,19 +7,19 @@ import CloudQueueIcon from "@mui/icons-material/CloudQueue";
 import LinkIcon from "@mui/icons-material/Link";
 import LinkOffIcon from "@mui/icons-material/LinkOff";
 import { useNavigate } from "react-router-dom";
-import { useListStore } from "../state/list-store";
+import { useListStore, useListActions } from "../state/list-store";
 import { useAuthStore, isConnected, displayName } from "../state/auth-store";
-import { useUiStore } from "../state/ui-store";
+import { useUiStore, useUiActions } from "../state/ui-store";
 import { useWithMessage } from "../hooks/use-with-message";
 
 export const Appbar = () => {
   const navigate = useNavigate();
   const currentListId = useListStore((s) => s.currentListId);
-  const setCurrentList = useListStore((s) => s.setCurrentList);
+  const { setCurrentList } = useListActions();
   const connected = useAuthStore(isConnected);
   const name = useAuthStore(displayName);
   const online = useUiStore((s) => s.online);
-  const toggleListEdit = useUiStore((s) => s.toggleListEdit);
+  const { toggleListEdit } = useUiActions();
 
   const shareData = {
     title: "Use this link to share this list",

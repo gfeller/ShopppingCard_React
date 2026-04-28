@@ -3,9 +3,7 @@ import { subscribeWithSelector } from 'zustand/middleware';
 import { IList } from '../model/list';
 import { listService } from '../services';
 
-interface ListState {
-  currentListId: string | undefined;
-  items: IList[];
+interface ListActions {
   setCurrentList: (id: string | undefined) => void;
   setList: (items: IList[]) => void;
   addList: (description: string) => Promise<void>;
@@ -15,16 +13,26 @@ interface ListState {
   removeShareList: (listId: string) => Promise<void>;
 }
 
+interface ListState {
+  currentListId: string | undefined;
+  items: IList[];
+  actions: ListActions;
+}
+
 export const useListStore = create<ListState>()(
   subscribeWithSelector((set) => ({
     currentListId: undefined,
     items: [],
-    setCurrentList: (id) => set({ currentListId: id }),
-    setList: (items) => set({ items }),
-    addList: (description) => listService.addList(description),
-    updateList: (list) => listService.update(list),
-    removeList: (id) => listService.remove(id),
-    addShareList: (listId) => listService.addShareList(listId),
-    removeShareList: (listId) => listService.removeShareList(listId),
+    actions: {
+      setCurrentList: (id) => set({ currentListId: id }),
+      setList: (items) => set({ items }),
+      addList: (description) => listService.addList(description),
+      updateList: (list) => listService.update(list),
+      removeList: (id) => listService.remove(id),
+      addShareList: (listId) => listService.addShareList(listId),
+      removeShareList: (listId) => listService.removeShareList(listId),
+    },
   }))
 );
+
+export const useListActions = () => useListStore((s) => s.actions);

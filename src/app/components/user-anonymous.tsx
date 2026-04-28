@@ -1,11 +1,12 @@
 import { Button, TextField } from '@mui/material';
 import { FormEvent, useState } from 'react';
-import { useAuthStore } from '../state/auth-store';
+import { useAuthActions } from '../state/auth-store';
 import { useWithMessage } from '../hooks/use-with-message';
 
 export const UserAnonymous = () => {
-  const connectUser = useWithMessage(useAuthStore((s) => s.connectUser), 'Angemeldet', 'Anmeldung fehlgeschlagen');
-  const login = useWithMessage(useAuthStore((s) => s.login), 'Angemeldet', 'Anmeldung fehlgeschlagen');
+  const authActions = useAuthActions();
+  const connectUser = useWithMessage(authActions.connectUser, 'Angemeldet', 'Anmeldung fehlgeschlagen');
+  const login = useWithMessage(authActions.login, 'Angemeldet', 'Anmeldung fehlgeschlagen');
 
   const [email, setEmail] = useState('');
   const [pwd, setPassword] = useState('');
