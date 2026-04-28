@@ -1,4 +1,4 @@
-# CLAUDE.md
+  # CLAUDE.md
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
@@ -51,6 +51,29 @@ Firebase (Auth + Firestore)
 - Material-UI 6, TailwindCSS 3, SCSS
 - React Router 7
 - Playwright (E2E tests only — no unit test framework)
+
+## Testing
+
+**E2E only** — Playwright is the sole test framework; there are no unit tests.
+
+- Test directory: `tests/`
+- Config: `playwright.config.ts` (testDir: `./tests`, parallel, HTML reporter)
+- Projects: chromium, firefox, webkit
+- Tests require the dev server running on `http://localhost:5173`
+- Each test clears cookies in `beforeEach` to isolate state
+
+**Test conventions:**
+- Files use `.spec.ts` suffix
+- Locators: prefer `data-testid` attributes, `aria-label`, or visible text
+
+**Running tests:**
+```bash
+npm run playwright:start              # Start dev server + run all tests
+npm run playwright:start-debug        # Start dev server + run tests in debug mode
+npx playwright test --project=chromium  # Run against Chromium only (dev server must be running)
+npx playwright test --project=chromium --debug  # Single test debug mode
+npx playwright show-report            # View HTML test report
+```
 
 ## Key Files
 

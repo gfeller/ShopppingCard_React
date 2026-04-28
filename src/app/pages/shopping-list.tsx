@@ -80,7 +80,6 @@ export const ShoppingList = () => {
 
   const deleteList = () => {
     removeList(currentListId!);
-    setCurrentList(undefined);
     toggleListEdit();
   };
 
@@ -98,7 +97,8 @@ export const ShoppingList = () => {
       <Box sx={{ overflow: "auto", flex: "1 1 100%" }}>
         {currentListId ? (
           <>
-            {Object.values(items).filter((x) => x.listId === currentListId).length > 0 ? (
+            {Object.values(items).filter((x) => x.listId === currentListId)
+              .length > 0 ? (
               <List>
                 {Object.values(items)
                   .sort((a, b) => b.createdAt!.seconds - a.createdAt!.seconds)
@@ -111,28 +111,50 @@ export const ShoppingList = () => {
                           sx={item.boughtAt ? { opacity: 0.5 } : undefined}
                         >
                           <ListItemButton onClick={() => toggleBought(item)}>
-                            {item.boughtAt ? <AddShoppingCartIcon /> : <CheckIcon />}
+                            {item.boughtAt ? (
+                              <AddShoppingCartIcon />
+                            ) : (
+                              <CheckIcon />
+                            )}
                             <ListItemText primary={item.description} />
                             {item.boughtAt ? (
-                              <p>{moment(item.boughtAt.toMillis()).fromNow()}</p>
+                              <p>
+                                {moment(item.boughtAt.toMillis()).fromNow()}
+                              </p>
                             ) : (
-                              <IconButton onClick={(e) => deleteItem(e, item.id!)}>
+                              <IconButton
+                                onClick={(e) => deleteItem(e, item.id!)}
+                              >
                                 <DeleteIcon />
                               </IconButton>
                             )}
                           </ListItemButton>
                         </ListItem>
-                      )
+                      ),
                   )}
               </List>
             ) : (
-              <Typography sx={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%" }}>
+              <Typography
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  height: "100%",
+                }}
+              >
                 Liste ist noch Leer!
               </Typography>
             )}
           </>
         ) : (
-          <Typography sx={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%" }}>
+          <Typography
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              height: "100%",
+            }}
+          >
             Keine Liste ausgewählt. Erstellen Sie doch eine neue!
           </Typography>
         )}
@@ -171,7 +193,11 @@ export const ShoppingList = () => {
           }}
         >
           {lists.map((list) => (
-            <BottomNavigationAction key={list.id} value={list.id} label={list.description} />
+            <BottomNavigationAction
+              key={list.id}
+              value={list.id}
+              label={list.description}
+            />
           ))}
           <BottomNavigationAction
             className="addNewList"
@@ -198,7 +224,10 @@ export const ShoppingList = () => {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => handleClose(true)}>Abbruch</Button>
-          <Button data-testid="createNewList" onClick={() => handleClose(false)}>
+          <Button
+            data-testid="createNewList"
+            onClick={() => handleClose(false)}
+          >
             Erfassen
           </Button>
         </DialogActions>
@@ -207,7 +236,13 @@ export const ShoppingList = () => {
       <Dialog open={showListEdit} onClose={() => handleEditClose(false)}>
         <DialogTitle>Liste Anpassen</DialogTitle>
         <DialogContent>
-          <Box sx={{ display: "flex", flexDirection: "column", alignItems: "start" }}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "start",
+            }}
+          >
             <TextField
               onChange={(event) => setText(event.target.value)}
               autoFocus
@@ -217,9 +252,13 @@ export const ShoppingList = () => {
               type="text"
               fullWidth
               variant="standard"
-              defaultValue={lists.find((x) => x.id === currentListId)?.description}
+              defaultValue={
+                lists.find((x) => x.id === currentListId)?.description
+              }
             />
-            <Button onClick={() => handleEditClose(true)}>Änderungen übernehmen</Button>
+            <Button onClick={() => handleEditClose(true)}>
+              Änderungen übernehmen
+            </Button>
             <ConfirmButton label="Liste" deleteFn={deleteList} />
             <Button onClick={() => handleEditClose(false)}>Abbruch</Button>
           </Box>

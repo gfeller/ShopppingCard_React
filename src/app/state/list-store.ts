@@ -20,7 +20,7 @@ interface ListState {
 }
 
 export const useListStore = create<ListState>()(
-  subscribeWithSelector((set) => ({
+  subscribeWithSelector((set, get) => ({
     currentListId: undefined,
     items: [],
     actions: {
@@ -28,7 +28,12 @@ export const useListStore = create<ListState>()(
       setList: (items) => set({ items }),
       addList: (description) => listService.addList(description),
       updateList: (list) => listService.update(list),
-      removeList: (id) => listService.remove(id),
+      removeList: (id) => {
+        if (get().currentListId === id) {
+          set({ currentListId: undefined });
+        }
+        return listService.remove(id);
+      },
       addShareList: (listId) => listService.addShareList(listId),
       removeShareList: (listId) => listService.removeShareList(listId),
     },
