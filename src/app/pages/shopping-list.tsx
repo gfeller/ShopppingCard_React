@@ -6,6 +6,7 @@ import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import {
   BottomNavigation,
   BottomNavigationAction,
+  Box,
   Button,
   Dialog,
   DialogActions,
@@ -94,7 +95,7 @@ export const ShoppingList = () => {
 
   return (
     <>
-      <div style={{ overflow: "auto", flex: "1 1 100%" }}>
+      <Box sx={{ overflow: "auto", flex: "1 1 100%" }}>
         {currentListId ? (
           <>
             {Object.values(items).filter((x) => x.listId === currentListId).length > 0 ? (
@@ -107,7 +108,7 @@ export const ShoppingList = () => {
                         <ListItem
                           disablePadding
                           key={item.id}
-                          className={item.boughtAt ? "opacity-50" : ""}
+                          sx={item.boughtAt ? { opacity: 0.5 } : undefined}
                         >
                           <ListItemButton onClick={() => toggleBought(item)}>
                             {item.boughtAt ? <AddShoppingCartIcon /> : <CheckIcon />}
@@ -135,13 +136,14 @@ export const ShoppingList = () => {
             Keine Liste ausgewählt. Erstellen Sie doch eine neue!
           </Typography>
         )}
-      </div>
+      </Box>
 
       <Paper elevation={3}>
         {currentListId && (
-          <form
+          <Box
+            component="form"
             onSubmit={(e: FormEvent) => handleSubmit(e)}
-            style={{ display: "flex", margin: "auto", maxWidth: "300px" }}
+            sx={{ display: "flex", margin: "auto", maxWidth: "300px" }}
           >
             <TextField
               id="standard-basic"
@@ -150,12 +152,12 @@ export const ShoppingList = () => {
               value={newItem}
               required
               onChange={(e) => setNewItem(e.target.value)}
-              style={{ flex: "1" }}
+              sx={{ flex: "1" }}
             />
             <IconButton aria-label="add Item" type="submit">
               <AddIcon />
             </IconButton>
-          </form>
+          </Box>
         )}
         <BottomNavigation
           sx={{ overflowX: "auto", marginRight: 0 }}
@@ -205,7 +207,7 @@ export const ShoppingList = () => {
       <Dialog open={showListEdit} onClose={() => handleEditClose(false)}>
         <DialogTitle>Liste Anpassen</DialogTitle>
         <DialogContent>
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "start" }}>
+          <Box sx={{ display: "flex", flexDirection: "column", alignItems: "start" }}>
             <TextField
               onChange={(event) => setText(event.target.value)}
               autoFocus
@@ -220,7 +222,7 @@ export const ShoppingList = () => {
             <Button onClick={() => handleEditClose(true)}>Änderungen übernehmen</Button>
             <ConfirmButton label="Liste" deleteFn={deleteList} />
             <Button onClick={() => handleEditClose(false)}>Abbruch</Button>
-          </div>
+          </Box>
         </DialogContent>
       </Dialog>
     </>

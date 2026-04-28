@@ -1,4 +1,4 @@
-import { AppBar, Button, IconButton, Toolbar } from "@mui/material";
+import { AppBar, Box, Button, IconButton, Toolbar } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
 import Editicon from "@mui/icons-material/Edit";
 import Shareicon from "@mui/icons-material/Share";
@@ -58,7 +58,7 @@ export const Appbar = () => {
             </div>
           )}
 
-          <div style={{ display: "flex", alignItems: "center" }}>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
             <Button
               data-testid="login-name"
               sx={{ textTransform: "none" }}
@@ -69,7 +69,7 @@ export const Appbar = () => {
               {name}
             </Button>
             {online ? <CloudQueueIcon /> : <CloudOffIcon />}
-          </div>
+          </Box>
         </Toolbar>
       </AppBar>
     </>

@@ -1,4 +1,4 @@
-import { Button, TextField } from '@mui/material';
+import { Box, Button, TextField } from '@mui/material';
 import { FormEvent, useState } from 'react';
 import { useAuthActions } from '../state/auth-store';
 import { useWithMessage } from '../hooks/use-with-message';
@@ -28,12 +28,12 @@ export const UserAnonymous = () => {
         verbinden oder sich mit einem bestehemden Account anmelden.
       </div>
       <form onSubmit={handleConnectUser}>
-        <div className="py-2">
+        <Box sx={{ py: 1 }}>
           <TextField variant="outlined" type="email" label="E-Mail"
             value={email} onChange={(e) => setEmail(e.target.value)} name="email" required />
           <TextField variant="outlined" type="password" label="Passwort"
             value={pwd} onChange={(e) => setPassword(e.target.value)} name="password" required />
-        </div>
+        </Box>
         <div>
           <Button type="submit" value="create">Account Erstellen</Button>
           <Button type="submit" value="register">Anmelden</Button>

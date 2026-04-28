@@ -33,7 +33,7 @@ export const SharedList = () => {
         <CardActions>
           <Button
             size="small"
-            style={{ display: "flex", flexDirection: "column" }}
+            sx={{ display: "flex", flexDirection: "column" }}
             onClick={() => addSharedList(true)}
           >
             <CheckIcon fontSize="medium" />
@@ -41,7 +41,7 @@ export const SharedList = () => {
           </Button>
           <Button
             size="small"
-            style={{ display: "flex", flexDirection: "column", color: "red" }}
+            sx={{ display: "flex", flexDirection: "column", color: "red" }}
             onClick={() => addSharedList(false)}
           >
             <ClearIcon fontSize="medium" />

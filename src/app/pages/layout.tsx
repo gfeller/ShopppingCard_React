@@ -1,4 +1,4 @@
-import { Alert, Snackbar } from "@mui/material";
+import { Alert, Box, Snackbar } from "@mui/material";
 import { Outlet } from "react-router-dom";
 import { Appbar } from "../components/app-bar";
 import { useUiStore, useUiActions } from "../state/ui-store";
@@ -8,7 +8,7 @@ export const Layout = () => {
   const { resetMessage } = useUiActions();
 
   return (
-    <div style={{
+    <Box sx={{
       display: "grid",
       height: "100dvh",
       maxHeight: "100dvh",
@@ -30,7 +30,7 @@ export const Layout = () => {
         </Alert>
       </Snackbar>
       <Appbar />
-      <div style={{
+      <Box sx={{
         position: "relative",
         display: "flex",
         flexDirection: "column",
@@ -39,7 +39,7 @@ export const Layout = () => {
         overflow: "auto",
       }}>
         <Outlet />
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };
