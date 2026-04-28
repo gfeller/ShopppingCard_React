@@ -8,7 +8,10 @@ export const Layout = () => {
   const { resetMessage } = useUiActions();
 
   return (
-    <div className="grid h-dvh max-h-dvh" style={{
+    <div style={{
+      display: "grid",
+      height: "100dvh",
+      maxHeight: "100dvh",
       gridTemplateAreas: '"toolbar" "content"',
       gridTemplateRows: "auto 1fr"
     }}>
