@@ -1,4 +1,4 @@
-import { addDoc, collection, CollectionReference, deleteDoc, doc, DocumentData, Firestore, query, QueryCompositeFilterConstraint, QueryConstraint, Unsubscribe, updateDoc, } from "firebase/firestore";
+import { addDoc, collection, CollectionReference, deleteDoc, doc, DocumentData, Firestore, query, QueryCompositeFilterConstraint, QueryConstraint, updateDoc } from "firebase/firestore";
 import { DTO } from "../model/dto";
 
 export abstract class BaseService<T extends DTO> {
