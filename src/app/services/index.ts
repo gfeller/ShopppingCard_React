@@ -14,7 +14,7 @@ const db = initializeFirestore(app, {
 
 const auth = getAuth(app);
 
-export const authService = new AuthService(auth);
+export const authService = new AuthService(db, auth);
 export const listService = new ListService(db, auth);
 export const itemService = new ItemService(db, auth);
 export const onlineService = new OnlineService();

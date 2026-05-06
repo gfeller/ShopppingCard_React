@@ -13,7 +13,11 @@
     "playright:open": "npx playwright test",
     "playwright:start": "start-server-and-test dev http://localhost:5173 playright:open",
     "playwright:start-debug": "start-server-and-test dev http://localhost:5173 playright:debug",
-    "test": "vitest"
+    "test": "vitest",
+    "deploy": "firebase deploy",
+    "deploy:hosting": "firebase deploy --only hosting",
+    "deploy:functions": "firebase deploy --only functions",
+    "emulator": "firebase emulators:start  --inspect-functions"
   },
   "dependencies": {
     "@emotion/react": "11.14.0",

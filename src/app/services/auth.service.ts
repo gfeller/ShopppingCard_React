@@ -10,7 +10,10 @@ import {
   updatePassword,
   updateProfile,
 } from 'firebase/auth';
+import { Firestore, doc, setDoc } from 'firebase/firestore';
+import { getMessaging, getToken } from 'firebase/messaging';
 import { AuthConnect, IAuthUser, ProfileChange } from '../model/auth';
+import { vapidKey } from '../firebase.config';
 
 function toIAuthUser(user: User): IAuthUser {
   return {
@@ -22,7 +25,7 @@ function toIAuthUser(user: User): IAuthUser {
 }
 
 export class AuthService {
-  constructor(public auth: Auth) { }
+  constructor(public db: Firestore, public auth: Auth) { }
 
   onAuthChange(cb: (user: IAuthUser | null) => void): () => void {
     return this.auth.onAuthStateChanged((user: User | null) => {
@@ -40,7 +43,6 @@ export class AuthService {
       user,
       EmailAuthProvider.credential(data.email, data.pwd)
     ).then((cred) => {
-      // caller receives the updated user via onAuthChange
       void cred;
     });
   }
@@ -67,5 +69,15 @@ export class AuthService {
     const cred = EmailAuthProvider.credential(email, pwdOld);
     await reauthenticateWithCredential(currentUser, cred);
     await updatePassword(currentUser, pwd);
+  }
+
+  async requestNotificationPermission(uid: string): Promise<NotificationPermission> {
+    const permission = await Notification.requestPermission();
+    if (permission === 'granted') {
+      const messaging = getMessaging();
+      const token = await getToken(messaging, { vapidKey });
+      await setDoc(doc(this.db, 'fcmTokens', uid), { token });
+    }
+    return permission;
   }
 }

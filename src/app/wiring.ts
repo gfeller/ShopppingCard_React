@@ -12,6 +12,7 @@ export function initWiring() {
       authService.signInAnonymously();
     } else {
       useAuthStore.getState().actions.setUser(user);
+      useAuthStore.getState().actions.initNotificationState();
     }
   });
 

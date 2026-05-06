@@ -10,16 +10,20 @@ interface AuthActions {
   resetPwdMail: (email: string) => Promise<void>;
   updateProfile: (data: ProfileChange) => Promise<void>;
   updatePassword: (email: string, pwdOld: string, pwd: string) => Promise<void>;
+  initNotificationState: () => void;
+  enableNotifications: () => Promise<void>;
 }
 
 interface AuthState {
   currentUser: IAuthUser | undefined | null;
+  notificationPermission: NotificationPermission | 'unsupported';
   actions: AuthActions;
 }
 
 export const useAuthStore = create<AuthState>()(
-  subscribeWithSelector((set) => ({
+  subscribeWithSelector((set, get) => ({
     currentUser: undefined,
+    notificationPermission: 'default',
     actions: {
       setUser: (user) => set({ currentUser: user }),
       connectUser: (data) => authService.connectUser(data),
@@ -30,6 +34,18 @@ export const useAuthStore = create<AuthState>()(
         set({ currentUser: authService.auth.currentUser });
       },
       updatePassword: (email, pwdOld, pwd) => authService.updatePassword(email, pwdOld, pwd),
+      initNotificationState: () => {
+        if (!('Notification' in window)) {
+          set({ notificationPermission: 'unsupported' });
+          return;
+        }
+        set({ notificationPermission: Notification.permission });
+      },
+      enableNotifications: async () => {
+        const uid = get().currentUser!.uid;
+        const permission = await authService.requestNotificationPermission(uid);
+        set({ notificationPermission: permission });
+      },
     },
   }))
 );
