@@ -14,7 +14,7 @@ interface ListSubscription {
 
 export class ItemService extends BaseService<IItem> {
   constructor(db: Firestore, public afAuth: Auth) {
-    super('list', db);
+    super('item', db);
   }
 
   subscribeToList(id: string | undefined, callbacks: ListSubscription) {

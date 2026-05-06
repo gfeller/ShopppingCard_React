@@ -4,76 +4,60 @@ import { getFirestore } from 'firebase-admin/firestore';
 import { getMessaging } from 'firebase-admin/messaging';
 import { initializeApp, applicationDefault } from 'firebase-admin/app';
 
-// Initialize the Firebase app
 initializeApp({
   credential: applicationDefault(),
 });
 
-// Define the Firestore trigger function
 exports.fcmSend = onDocumentCreated('item/{itemId}', async (event) => {
   const data = event.data.data();
   const targetId = event.params.itemId;
   const containerId = data.listId;
-  const payload = {
-    notification: {
-      title: 'Neuer Eintrag: ' + data.description,
-      body: '',
-      click_action: 'https://shoppinglist-react-4eead.web.app/list/' + data.listId,
-      icon: '/favicon.ico',
-      tag: data.listId,
-    },
-    data: {
-      type: 'item',
-      targetId: targetId,
-      containerId: containerId,
-    },
-  };
 
-  const message = {
-    token: '',
-    data: {
-      type: 'item',
-      targetId: targetId,
-      containerId: containerId,
-    },
-    notification: {
-      title: 'Neuer Eintrag: ' + data.description,
-      body: '',
-    },
-    webpush: {
-      notification: {
-        tag: data.listId,
-        icon: '/favicon.ico',
-        vibrate: 3,
-      },
-      fcmOptions: {
-        link: 'https://shoppinglist-react-4eead.web.app/list/' + data.listId,
-      },
-    },
-  };
-
-  logger.warn(message);
+  logger.info('fcmSend triggered', { targetId, containerId, description: data.description });
 
   try {
+    // get the list (needed for title)
     const listDoc = await getFirestore().collection('list').doc(data.listId).get();
     const listData = listDoc.data();
 
-    if (listData) {
-      payload.notification.body = `in der Liste ${listData.description}`;
-      const ownerRefs = Object.keys(listData.owner).map(owner => getFirestore().doc('fcmTokens/' + owner));
-      const ownerDocs = await getFirestore().getAll(...ownerRefs);
+    // get tokens for all owners
+    const ownerUids = Object.keys(listData.owner ?? {});
+    const ownerRefs = ownerUids.map(uid => getFirestore().doc('fcmTokens/' + uid));
+    const ownerDocs = await getFirestore().getAll(...ownerRefs);
 
-      ownerDocs
-        .map(doc => doc.data())
-        .filter(doc => doc !== undefined)
-        .forEach(doc => {
-          if (doc && doc.token) {
-            logger.log(message, doc.token);
-            getMessaging().send({ ...message, token: doc.token });
-          }
-        });
-    }
+    const tokens = ownerDocs
+      .map(doc => ({ uid: doc.id, token: doc.data()?.token }))
+      .filter(entry => !!entry.token);
+
+
+    await Promise.allSettled(
+      tokens.map(({ token }) => {
+        const message = {
+          token: token,
+          data: {
+            type: 'item',
+            targetId,
+            containerId,
+          },
+          notification: {
+            title: 'Neuer Eintrag: ' + data.description,
+            body: `in der Liste ${listData.description}`,
+          },
+          webpush: {
+            notification: {
+              tag: data.listId,
+              icon: '/favicon.ico',
+              vibrate: [200, 100, 200],
+            },
+            fcmOptions: {
+              link: 'https://shoppinglist-react-4eead.web.app/list/' + data.listId,
+            },
+          },
+        };
+        return getMessaging().send(message);
+      })
+    );
   } catch (err) {
-    console.log(err);
+    logger.error('fcmSend error', { error: err });
   }
 });

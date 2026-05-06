@@ -11,13 +11,17 @@ export const useWithMessage = <T extends unknown[], R = void>(
   return (...args: T) =>
     action(...args)
       .then((result) => {
-        if (successText) setMessage({
-          text: typeof successText === 'function' ? successText(result) : successText,
-          severity: Severity.success,
-        });
+        if (successText) {
+          setMessage({
+            text: typeof successText === 'function' ? successText(result) : successText,
+            severity: Severity.success,
+          });
+        }
       })
-      .catch((error: Error) => setMessage({
-        text: typeof errorText === 'function' ? errorText(error) : errorText,
-        severity: Severity.error,
-      }));
+      .catch((error: Error) => {
+        setMessage({
+          text: typeof errorText === 'function' ? errorText(error) : errorText,
+          severity: Severity.error,
+        });
+      });
 };
