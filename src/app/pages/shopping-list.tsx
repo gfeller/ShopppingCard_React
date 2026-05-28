@@ -28,11 +28,17 @@ import { ConfirmButton } from "../components/confirm-button";
 import { useListStore, useListActions } from "../state/list-store";
 import { useItemStore, useItemActions } from "../state/item-store";
 import { useUiStore, useUiActions } from "../state/ui-store";
+import { useWithMessage } from "../hooks/use-with-message";
 
 export const ShoppingList = () => {
   const lists = useListStore((s) => s.items);
   const currentListId = useListStore((s) => s.currentListId);
-  const { setCurrentList, addList, updateList, removeList } = useListActions();
+  const authActions = useListActions();
+
+  const { setCurrentList, addList, updateList } = authActions;
+
+
+  const removeList = useWithMessage(authActions.removeList, 'Liste gelöscht', 'Löschung fehlgeschlagen');
 
   const items = useItemStore((s) => s.items);
   const { addItem, removeItem, toggleBought } = useItemActions();
